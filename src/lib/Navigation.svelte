@@ -36,16 +36,6 @@
 			<li><a href="/anime-list">Anime List</a></li>
 			<li><a href="/ongoing">Ongoing</a></li>
 			<li><a href="/complete">Complete</a></li>
-			<li>
-				<button type="button" class="genre-btn">Genres <i class="fa fa-caret-down"></i></button>
-				<ul>
-					<li><a href="/genre/action">Action</a></li>
-					<li><a href="/genre/adventure">Adventure</a></li>
-					<li><a href="/genre/comedy">Comedy</a></li>
-					<li><a href="/genre/drama">Drama</a></li>
-					<li><a href="/genre/fantasy">Fantasy</a></li>
-				</ul>
-			</li>
 			<li><a href="/schedule">Schedule</a></li>
 		</ul>
 		<a href="/random" id="btn-randrom">Random</a>
