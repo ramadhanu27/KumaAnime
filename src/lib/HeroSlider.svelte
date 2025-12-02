@@ -332,18 +332,5 @@
 		.btn {
 			width: 100%;
 		}
-
-		.hero-nav {
-			width: 40px;
-			height: 40px;
-		}
-
-		.hero-nav.prev {
-			left: 10px;
-		}
-
-		.hero-nav.next {
-			right: 10px;
-		}
 	}
 </style>

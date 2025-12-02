@@ -18,6 +18,13 @@
 	function scrollToTop() {
 		window.scrollTo({ top: 0, behavior: 'smooth' });
 	}
+
+	function handleKeyDown(e: KeyboardEvent) {
+		if (e.key === 'Enter' || e.key === ' ') {
+			e.preventDefault();
+			scrollToTop();
+		}
+	}
 </script>
 
 <!-- Footer -->
@@ -43,9 +50,9 @@
 </div>
 
 <!-- Back to Top Button -->
-<div class="ignielToTop" class:show={showBackToTop} on:click={scrollToTop} role="button" tabindex="0">
+<button class="ignielToTop" class:show={showBackToTop} on:click={scrollToTop} on:keydown={handleKeyDown} aria-label="Back to top">
 	<i class="fa fa-arrow-up"></i>
-</div>
+</button>
 
 <style>
 	:global(#kaki) {

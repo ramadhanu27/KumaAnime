@@ -37,7 +37,7 @@
 			<li><a href="/ongoing">Ongoing</a></li>
 			<li><a href="/complete">Complete</a></li>
 			<li>
-				<a href="#">Genres <i class="fa fa-caret-down"></i></a>
+				<button type="button" class="genre-btn">Genres <i class="fa fa-caret-down"></i></button>
 				<ul>
 					<li><a href="/genre/action">Action</a></li>
 					<li><a href="/genre/adventure">Adventure</a></li>

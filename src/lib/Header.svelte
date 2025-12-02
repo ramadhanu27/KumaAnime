@@ -43,7 +43,7 @@
 		<div class="searchx">
 			<form id="form" on:submit={handleSearch}>
 				<input type="text" id="q" name="q" placeholder="Search anime..." autocomplete="off" />
-				<button type="submit" id="cari"><i class="fa fa-search"></i></button>
+				<button type="submit" id="cari" aria-label="Search"><i class="fa fa-search"></i></button>
 			</form>
 		</div>
 
