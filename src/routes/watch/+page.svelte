@@ -2,6 +2,9 @@
 	import Header from '$lib/Header.svelte';
 	import Navigation from '$lib/Navigation.svelte';
 	import Footer from '$lib/Footer.svelte';
+	import { watchHistory } from '$lib/stores/watchHistory';
+	import { onMount } from 'svelte';
+	import { page } from '$app/stores';
 
 	export let data;
 
@@ -10,6 +13,17 @@
 
 	let selectedStreamIndex = 0;
 	let showMenu = false;
+
+	// Save to watch history when episode loads
+	$: if (episodeDetail && typeof window !== 'undefined') {
+		watchHistory.add({
+			slug: $page.url.searchParams.get('slug') || '',
+			title: episodeDetail.title,
+			seriesName: episodeDetail.seriesName,
+			episode: episodeDetail.episode,
+			thumbnail: episodeDetail.thumbnail || ''
+		});
+	}
 
 	function getEpisodeNumber(title: string): string {
 		const match = title.match(/Episode\s+(\d+)/i);

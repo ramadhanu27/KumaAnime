@@ -40,7 +40,7 @@
 			<li><a href="/">Home</a></li>
 			<li><a href="/anime-list">Anime List</a></li>
 			<li><a href="/ongoing">Ongoing</a></li>
-			<li><a href="/complete">Complete</a></li>
+			<li><a href="/history">History</a></li>
 			<li><a href="/schedule">Schedule</a></li>
 		</ul>
 	</div>
@@ -74,12 +74,13 @@
 		</div>
 	</button>
 	
-	<div class="nav-item theme-indicator">
+	<a href="/history" class="nav-item">
 		<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-			<path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+			<circle cx="12" cy="12" r="10"></circle>
+			<polyline points="12 6 12 12 16 14"></polyline>
 		</svg>
-		<span>Dark</span>
-	</div>
+		<span>History</span>
+	</a>
 	
 	<a href="/login" class="nav-item">
 		<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -139,6 +140,12 @@
 				<a href="/random" on:click={toggleMobileMenu}>
 					<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="2"/><circle cx="8" cy="8" r="1.5" fill="currentColor"/><circle cx="16" cy="8" r="1.5" fill="currentColor"/><circle cx="8" cy="16" r="1.5" fill="currentColor"/><circle cx="16" cy="16" r="1.5" fill="currentColor"/><circle cx="12" cy="12" r="1.5" fill="currentColor"/></svg>
 					Random
+				</a>
+			</li>
+			<li>
+				<a href="/history" on:click={toggleMobileMenu}>
+					<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+					History
 				</a>
 			</li>
 		</ul>
@@ -268,14 +275,6 @@
 	.nav-item span {
 		font-size: 10px;
 		white-space: nowrap;
-	}
-
-	.nav-item.theme-indicator {
-		color: #818cf8;
-	}
-
-	.nav-item.theme-indicator svg {
-		color: #818cf8;
 	}
 
 	/* Center floating button */
