@@ -1,4 +1,5 @@
 import type { PageServerLoad } from "./$types";
+import { redirect } from "@sveltejs/kit";
 
 interface Episode {
   episode: string;
@@ -65,9 +66,7 @@ export const load: PageServerLoad = async ({ url, fetch }) => {
   // Deteksi jika slug adalah episode (mengandung "episode")
   if (slug.toLowerCase().includes('episode')) {
     // Redirect ke watch page untuk episode
-    return {
-      redirect: `/watch?slug=${encodeURIComponent(slug)}`,
-    };
+    throw redirect(307, `/watch?slug=${encodeURIComponent(slug)}`);
   }
 
   try {
