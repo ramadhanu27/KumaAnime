@@ -25,10 +25,16 @@
 
 	async function loadPopularAnime() {
 		try {
-			const response = await fetch(`${API_BASE_URL}/complete?page=1`);
+			const response = await fetch('https://rdapi.vercel.app/api/anime/popular?period=all');
 			const data = await response.json();
 			if (data.success && data.data) {
-				popularAnime = data.data.slice(0, 5);
+				popularAnime = data.data.slice(0, 10).map((anime: any) => ({
+					title: anime.title,
+					thumb: anime.thumb,
+					slug: anime.slug.replace(/\//g, ''),
+					rating: anime.rating || '0',
+					genres: anime.genres || []
+				}));
 			}
 		} catch (error) {
 			console.error('Error loading popular anime:', error);
@@ -76,7 +82,7 @@
 									<span class="type-badge">TV</span>
 									<span class="rating">★ {anime.rating}</span>
 								</div>
-								<p class="popular-genres">Action, Adventure, Fantasy</p>
+								<p class="popular-genres">{anime.genres?.slice(0, 3).join(', ') || 'N/A'}</p>
 							</div>
 						</a>
 					{/each}

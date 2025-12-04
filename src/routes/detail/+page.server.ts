@@ -5,7 +5,7 @@ interface Episode {
   title: string;
   slug: string;
   date: string;
-  isCurrent: boolean;
+  url?: string;
 }
 
 interface StreamingLink {
@@ -27,12 +27,10 @@ interface CastMember {
 
 interface AnimeDetail {
   title: string;
-  seriesName: string;
   alternativeTitle: string;
   thumb: string;
   rating: string;
   synopsis: string;
-  episode: string;
   type: string;
   status: string;
   released: string;
@@ -41,10 +39,12 @@ interface AnimeDetail {
   studio: string;
   genres: string[];
   cast: CastMember[];
-  streamingLinks: StreamingLink[];
-  downloadLinks: DownloadLink[];
-  episodeList: Episode[];
-  relatedEpisodes: unknown[];
+  totalEpisodes: number;
+  episodes: Episode[];
+  producers?: string;
+  director?: string;
+  releasedOn?: string;
+  updatedOn?: string;
 }
 
 interface ApiResponse {
@@ -62,22 +62,38 @@ export const load: PageServerLoad = async ({ url, fetch }) => {
     };
   }
 
+  // Deteksi jika slug adalah episode (mengandung "episode")
+  if (slug.toLowerCase().includes('episode')) {
+    // Redirect ke watch page untuk episode
+    return {
+      redirect: `/watch?slug=${encodeURIComponent(slug)}`,
+    };
+  }
+
   try {
-    const response = await fetch(`https://rdapi.vercel.app/api/anime/detail${slug}`);
+    // Slug sudah dalam format yang benar dari sidebar (contoh: "animeone-piece")
+    // Gunakan langsung sebagai parameter API
+    const response = await fetch(`https://rdapi.vercel.app/api/anime/series/anime/${slug.replace('anime', '')}/`);
     if (!response.ok) {
       throw new Error(`API error: ${response.status}`);
     }
     const data: ApiResponse = await response.json();
 
+    // Map episodes ke episodeList untuk kompatibilitas template
+    const animeDetail = data.data;
+    if (animeDetail && animeDetail.episodes) {
+      (animeDetail as any).episodeList = animeDetail.episodes;
+    }
+
     return {
-      animeDetail: data.data || null,
+      animeDetail: animeDetail || null,
       error: null,
     };
   } catch (error) {
-    console.error("Error fetching anime detail:", error);
+    console.error("Error memuat detail anime:", error);
     return {
       animeDetail: null,
-      error: "Gagal memuat detail anime",
+      error: "Gagal memuat detail anime. Silakan coba lagi.",
     };
   }
 };
