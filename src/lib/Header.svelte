@@ -1,13 +1,9 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
-	import { darkMode } from './stores/darkMode';
 
 	let isScrolled = false;
 
 	onMount(() => {
-		// Initialize dark mode from store
-		darkMode.init();
-
 		// Handle scroll effect
 		const handleScroll = () => {
 			isScrolled = window.scrollY > 20;
@@ -18,10 +14,6 @@
 			window.removeEventListener('scroll', handleScroll);
 		};
 	});
-
-	function toggleDarkMode() {
-		darkMode.toggle();
-	}
 
 	function handleSearch(e: Event) {
 		e.preventDefault();
@@ -67,14 +59,12 @@
 
 		<!-- Right Section -->
 		<div class="header-actions">
-			<!-- Theme Toggle -->
-			<button class="theme-toggle" on:click={toggleDarkMode} aria-label="Toggle theme">
-				{#if $darkMode}
-					<span class="theme-icon">🌙</span>
-				{:else}
-					<span class="theme-icon">☀️</span>
-				{/if}
-			</button>
+			<!-- Dark Mode Indicator -->
+			<div class="theme-indicator" aria-label="Dark mode enabled">
+				<svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+					<path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+				</svg>
+			</div>
 		</div>
 	</div>
 </header>
@@ -230,26 +220,16 @@
 		flex-shrink: 0;
 	}
 
-	.theme-toggle {
+	.theme-indicator {
 		width: 44px;
 		height: 44px;
 		border-radius: 50%;
-		background: rgba(255, 255, 255, 0.06);
-		border: 1px solid rgba(255, 255, 255, 0.08);
-		cursor: pointer;
+		background: rgba(99, 102, 241, 0.15);
+		border: 1px solid rgba(99, 102, 241, 0.3);
 		display: flex;
 		align-items: center;
 		justify-content: center;
-		transition: all 0.3s ease;
-	}
-
-	.theme-toggle:hover {
-		background: rgba(255, 255, 255, 0.1);
-		transform: rotate(15deg);
-	}
-
-	.theme-icon {
-		font-size: 20px;
+		color: #818cf8;
 	}
 
 	/* Responsive */
@@ -291,7 +271,7 @@
 			height: 42px;
 		}
 
-		.theme-toggle {
+		.theme-indicator {
 			width: 40px;
 			height: 40px;
 		}
@@ -317,13 +297,9 @@
 			height: 16px;
 		}
 
-		.theme-toggle {
+		.theme-indicator {
 			width: 36px;
 			height: 36px;
-		}
-
-		.theme-icon {
-			font-size: 16px;
 		}
 	}
 </style>

@@ -123,7 +123,6 @@
 					{#each genres as genre (genre.slug)}
 						<a href={`/genre${genre.slug}`} class="genre-item">
 							<span class="genre-name">{genre.name}</span>
-							<span class="genre-count">{Math.floor(Math.random() * 20) + 1}</span>
 						</a>
 					{/each}
 				</div>
