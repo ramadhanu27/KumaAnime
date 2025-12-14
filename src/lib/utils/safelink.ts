@@ -2,14 +2,25 @@
 
 /**
  * ouo.io Configuration
- * Replace 'YOUR_API_KEY' with your actual ouo.io API key
+ * Replace values with your actual settings
  * Get your API key from: https://ouo.io/manage/tools/quick-link
  */
 export const OUO_CONFIG = {
   enabled: true, // Set to false to disable ouo.io
   apiKey: "YG5waAvG", // Your ouo.io API key from the Quick Link page
   baseUrl: "https://ouo.io/qs", // Quick Link format
+  // PENTING: Ganti dengan domain production Anda!
+  productionDomain: "https://kumastream.web.id", // Domain untuk ouo.io redirect
 };
+
+/**
+ * Check if current environment is localhost/development
+ * @param origin - window.location.origin
+ * @returns true if localhost
+ */
+export function isLocalhost(origin: string): boolean {
+  return origin.includes("localhost") || origin.includes("127.0.0.1");
+}
 
 /**
  * Encode a URL for safelink (browser-safe)
@@ -59,11 +70,24 @@ export function generateInternalSafelinkUrl(downloadUrl: string, title?: string)
 /**
  * Wrap a URL with ouo.io Quick Link
  * @param destinationUrl - The full destination URL (including domain)
- * @returns ouo.io wrapped URL
+ * @param origin - Current window.location.origin (to detect localhost)
+ * @returns ouo.io wrapped URL or original URL if on localhost
  */
-export function wrapWithOuo(destinationUrl: string): string {
+export function wrapWithOuo(destinationUrl: string, origin?: string): string {
   if (!OUO_CONFIG.enabled) {
     return destinationUrl;
+  }
+
+  // Skip ouo.io on localhost - langsung ke safelink
+  // ouo.io tidak menerima localhost URLs
+  if (origin && isLocalhost(origin)) {
+    // Di localhost, extract path dari URL dan return path saja
+    try {
+      const url = new URL(destinationUrl);
+      return url.pathname + url.search;
+    } catch {
+      return destinationUrl;
+    }
   }
 
   // Format: https://ouo.io/qs/API_KEY?s=destination_url
@@ -100,11 +124,17 @@ export function generateSafelinkUrl(downloadUrl: string, title?: string): string
  * Get the full ouo.io URL (must be called client-side with window.location.origin)
  * @param safelinkPath - The safelink path
  * @param origin - The site origin (window.location.origin)
- * @returns Full ouo.io wrapped URL
+ * @returns Full ouo.io wrapped URL or just the path if on localhost
  */
 export function getOuoUrl(safelinkPath: string, origin: string): string {
-  const fullSafelinkUrl = `${origin}${safelinkPath}`;
-  return wrapWithOuo(fullSafelinkUrl);
+  // Jika localhost, langsung return path saja (skip ouo.io)
+  if (isLocalhost(origin)) {
+    return safelinkPath;
+  }
+
+  // Di production, gunakan domain production untuk ouo.io
+  const fullSafelinkUrl = `${OUO_CONFIG.productionDomain}${safelinkPath}`;
+  return wrapWithOuo(fullSafelinkUrl, origin);
 }
 
 /**
