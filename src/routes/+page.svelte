@@ -5,41 +5,25 @@
 	import AnimeGrid from '$lib/AnimeGrid.svelte';
 	import Sidebar from '$lib/Sidebar.svelte';
 	import Footer from '$lib/Footer.svelte';
-	import { onMount } from 'svelte';
 
 	export let data;
-
-	let showPreloader = true;
-
-	onMount(() => {
-		setTimeout(() => {
-			showPreloader = false;
-		}, 500);
-	});
 </script>
 
-<!-- Preloader -->
-{#if showPreloader}
-	<div class="preloader" id="preloader">
-		<div class="loading">
-			<div class="loader"></div>
-			Loading...
-		</div>
-	</div>
-{/if}
+<svelte:head>
+	<title>KumaStream - Nonton Anime Subtitle Indonesia</title>
+	<meta name="description" content="Streaming dan download anime subtitle Indonesia gratis. Koleksi lengkap anime ongoing dan completed.">
+</svelte:head>
 
 <Header />
 <Navigation />
 
-<!-- Main Container -->
-<div class="main-container">
+<div class="page">
+	<!-- Hero Slider -->
 	<HeroSlider />
 
-	<!-- Content Wrapper - Two Column Layout -->
-	<div class="content-layout">
-		<!-- Main Content - Left Side -->
-		<main class="main-content">
-			<!-- Ongoing Anime Section -->
+	<!-- Content -->
+	<div class="content">
+		<main>
 			<AnimeGrid 
 				animeList={data.ongoingAnime} 
 				sectionTitle="Ongoing Anime" 
@@ -47,7 +31,6 @@
 				type="ongoing" 
 			/>
 			
-			<!-- Completed Anime Section -->
 			<AnimeGrid 
 				animeList={data.completedAnime} 
 				sectionTitle="Completed Anime" 
@@ -56,8 +39,7 @@
 			/>
 		</main>
 
-		<!-- Sidebar - Right Side -->
-		<aside class="sidebar-wrapper">
+		<aside>
 			<Sidebar />
 		</aside>
 	</div>
@@ -69,60 +51,56 @@
 	:global(body) {
 		margin: 0;
 		padding: 0;
+		background: #0f0f0f;
+		color: #f4f4f5;
 	}
 
-	.main-container {
+	.page {
 		max-width: 1400px;
 		margin: 0 auto;
-		padding: 90px 24px 24px;
+		padding: 120px 24px 40px;
 	}
 
-	.content-layout {
+	.content {
 		display: flex;
-		gap: 24px;
-		margin-top: 24px;
+		gap: 32px;
+		margin-top: 32px;
 	}
 
-	.main-content {
+	main {
 		flex: 1;
 		min-width: 0;
 	}
 
-	.sidebar-wrapper {
-		width: 340px;
+	aside {
+		width: 320px;
 		flex-shrink: 0;
 	}
 
-	/* Responsive */
 	@media (max-width: 1200px) {
-		.sidebar-wrapper {
-			width: 300px;
+		aside {
+			width: 280px;
 		}
 	}
 
 	@media (max-width: 1024px) {
-		.content-layout {
+		.content {
 			flex-direction: column;
 		}
 
-		.sidebar-wrapper {
+		aside {
 			width: 100%;
 		}
 	}
 
 	@media (max-width: 800px) {
-		.main-container {
-			padding: 80px 16px 16px;
+		.page {
+			padding: 72px 16px 80px;
 		}
 
-		.content-layout {
-			gap: 16px;
-		}
-	}
-
-	@media (max-width: 480px) {
-		.main-container {
-			padding: 70px 12px 12px;
+		.content {
+			gap: 24px;
+			margin-top: 24px;
 		}
 	}
 </style>

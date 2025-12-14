@@ -31,90 +31,82 @@
 	export let type: 'ongoing' | 'completed' = 'ongoing';
 </script>
 
-<!-- Anime Section -->
-<div class="bixbox">
-	<div class="releases home">
+<section class="section">
+	<div class="section-header">
 		<h2>{sectionTitle}</h2>
 		{#if viewAllHref}
-			<a href={viewAllHref} class="v1">View All</a>
+			<a href={viewAllHref} class="view-all">
+				View All
+				<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16">
+					<path d="M5 12h14M12 5l7 7-7 7"/>
+				</svg>
+			</a>
 		{/if}
 	</div>
-	<div id="content-wrap">
-		<div class="blog-posts hfeed item">
-			{#each animeList as anime, index (anime.animeId + index)}
-				<AnimeCard {anime} {type} />
-			{/each}
-		</div>
+	<div class="grid">
+		{#each animeList as anime, index (anime.animeId + index)}
+			<AnimeCard {anime} {type} />
+		{/each}
 	</div>
-</div>
+</section>
 
 <style>
-	.bixbox {
-		margin-bottom: 32px;
+	.section {
+		margin-bottom: 40px;
 	}
 
-	.releases {
+	.section-header {
 		display: flex;
 		align-items: center;
 		justify-content: space-between;
 		margin-bottom: 20px;
 		padding-bottom: 12px;
-		border-bottom: 2px solid rgba(99, 102, 241, 0.3);
+		border-bottom: 1px solid #27272a;
 	}
 
-	.releases h2 {
-		font-size: 1.5rem;
-		font-weight: 700;
-		color: #f8fafc;
+	.section-header h2 {
+		font-size: 18px;
+		font-weight: 600;
+		color: #f4f4f5;
 		margin: 0;
+	}
+
+	.view-all {
 		display: flex;
 		align-items: center;
-		gap: 8px;
-	}
-
-	.v1 {
-		color: #818cf8;
+		gap: 4px;
+		color: #71717a;
 		text-decoration: none;
-		font-size: 14px;
+		font-size: 13px;
 		font-weight: 500;
-		padding: 8px 16px;
-		background: rgba(99, 102, 241, 0.1);
-		border-radius: 20px;
-		transition: all 0.3s ease;
+		transition: color 0.2s;
 	}
 
-	.v1:hover {
-		background: rgba(99, 102, 241, 0.2);
-		color: #a5b4fc;
-		transform: translateX(3px);
+	.view-all:hover {
+		color: #facc15;
 	}
 
-	#content-wrap {
-		width: 100%;
-	}
-
-	.blog-posts {
+	.grid {
 		display: grid;
-		grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
-		gap: 20px;
+		grid-template-columns: repeat(auto-fill, minmax(155px, 1fr));
+		gap: 16px;
 	}
 
 	@media (max-width: 768px) {
-		.blog-posts {
-			grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+		.grid {
+			grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
 			gap: 12px;
 		}
 
-		.releases h2 {
-			font-size: 1.2rem;
+		.section-header h2 {
+			font-size: 16px;
 		}
 	}
 
 	@media (max-width: 480px) {
-		.blog-posts {
-			grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+		.grid {
+			grid-template-columns: repeat(3, 1fr);
 			gap: 10px;
 		}
 	}
 </style>
-

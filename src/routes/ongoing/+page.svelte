@@ -21,21 +21,13 @@
 <Navigation />
 
 <main class="ongoing-page">
-	<div class="page-header">
-		<div class="header-icon">
-			<svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-				<polygon points="5 3 19 12 5 21 5 3"/>
-			</svg>
-		</div>
-		<h1>Anime Ongoing</h1>
-		<p>Daftar anime yang sedang berlangsung</p>
+	<div class="section-header">
+		<h2>Anime Ongoing</h2>
+		<span class="subtitle">Daftar anime yang sedang berlangsung</span>
 	</div>
 
 	{#if error}
 		<div class="error-container">
-			<svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-				<circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>
-			</svg>
 			<p>{error}</p>
 		</div>
 	{:else if animeList && animeList.length > 0}
@@ -48,18 +40,16 @@
 							alt={anime.title}
 							loading="lazy"
 							on:error={(e) => {
-								(e.currentTarget as HTMLImageElement).src = 'https://via.placeholder.com/247x350/1a1a2e/6366f1?text=No+Image';
+								(e.currentTarget as HTMLImageElement).src = 'https://via.placeholder.com/247x350/18181b/52525b?text=No+Image';
 							}}
 						/>
 						<div class="card-overlay">
-							<div class="play-button">
-								<svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
-									<polygon points="5 3 19 12 5 21 5 3"/>
-								</svg>
-							</div>
+							<svg width="32" height="32" viewBox="0 0 24 24" fill="currentColor">
+								<polygon points="5 3 19 12 5 21 5 3"/>
+							</svg>
 						</div>
 						{#if anime.episodes}
-							<span class="episode-badge">Ep {anime.episodes}</span>
+							<span class="episode-badge">EP {anime.episodes}</span>
 						{/if}
 						{#if anime.releaseDay}
 							<span class="day-badge">{anime.releaseDay}</span>
@@ -78,30 +68,21 @@
 		<!-- Pagination -->
 		<div class="pagination">
 			{#if hasPrevPage}
-				<button class="pagination-btn prev" on:click={() => goToPage(currentPage - 1)}>
-					<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-						<path d="M19 12H5M12 19l-7-7 7-7"/>
-					</svg>
-					Sebelumnya
+				<button class="pagination-btn" on:click={() => goToPage(currentPage - 1)}>
+					« Sebelumnya
 				</button>
 			{/if}
 			
 			<span class="page-info">Halaman {currentPage} dari {totalPages}</span>
 			
 			{#if hasNextPage}
-				<button class="pagination-btn next" on:click={() => goToPage(currentPage + 1)}>
-					Selanjutnya
-					<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-						<path d="M5 12h14M12 5l7 7-7 7"/>
-					</svg>
+				<button class="pagination-btn" on:click={() => goToPage(currentPage + 1)}>
+					Selanjutnya »
 				</button>
 			{/if}
 		</div>
 	{:else}
 		<div class="empty-container">
-			<svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-				<rect x="2" y="7" width="20" height="15" rx="2"/><polyline points="17 2 12 7 7 2"/>
-			</svg>
 			<h3>Tidak ada anime</h3>
 			<p>Tidak ditemukan anime ongoing saat ini</p>
 		</div>
@@ -112,53 +93,38 @@
 
 <style>
 	.ongoing-page {
-		min-height: 100vh;
-		padding: 130px 24px 60px;
 		max-width: 1400px;
 		margin: 0 auto;
+		padding: 120px 24px 40px;
 	}
 
-	.page-header {
-		text-align: center;
-		margin-bottom: 48px;
-	}
-
-	.header-icon {
-		display: inline-flex;
+	.section-header {
+		display: flex;
 		align-items: center;
-		justify-content: center;
-		width: 64px;
-		height: 64px;
-		background: linear-gradient(135deg, #10b981 0%, #059669 100%);
-		border-radius: 16px;
-		color: white;
+		justify-content: space-between;
 		margin-bottom: 20px;
+		padding-bottom: 12px;
+		border-bottom: 1px solid #27272a;
 	}
 
-	.page-header h1 {
-		font-size: 36px;
-		font-weight: 800;
-		color: #f8fafc;
-		margin: 0 0 8px;
-	}
-
-	.page-header p {
-		color: rgba(248, 250, 252, 0.6);
-		font-size: 16px;
+	.section-header h2 {
+		font-size: 18px;
+		font-weight: 600;
+		color: #f4f4f5;
 		margin: 0;
+	}
+
+	.subtitle {
+		color: #71717a;
+		font-size: 13px;
 	}
 
 	.error-container {
 		text-align: center;
-		padding: 60px 40px;
-		background: rgba(244, 63, 94, 0.1);
-		border: 1px solid rgba(244, 63, 94, 0.2);
-		border-radius: 20px;
-		color: #f43f5e;
-	}
-
-	.error-container svg {
-		margin-bottom: 16px;
+		padding: 40px;
+		background: #18181b;
+		border-radius: 8px;
+		color: #dc2626;
 	}
 
 	.error-container p {
@@ -167,109 +133,96 @@
 
 	.anime-grid {
 		display: grid;
-		grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
-		gap: 24px;
-		margin-bottom: 48px;
+		grid-template-columns: repeat(auto-fill, minmax(155px, 1fr));
+		gap: 16px;
+		margin-bottom: 32px;
 	}
 
 	.anime-card {
-		background: rgba(26, 26, 46, 0.8);
-		border-radius: 16px;
+		background: #18181b;
+		border-radius: 6px;
 		overflow: hidden;
 		text-decoration: none;
-		transition: all 0.3s ease;
-		border: 1px solid rgba(255, 255, 255, 0.05);
+		transition: transform 0.2s, box-shadow 0.2s;
 	}
 
 	.anime-card:hover {
-		transform: translateY(-8px);
-		box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
-		border-color: rgba(99, 102, 241, 0.3);
+		transform: translateY(-4px);
+		box-shadow: 0 8px 24px rgba(0,0,0,0.4);
 	}
 
 	.card-image {
 		position: relative;
-		aspect-ratio: 3/4;
+		width: 100%;
+		padding-top: 142%;
+		background: #27272a;
 		overflow: hidden;
 	}
 
 	.card-image img {
+		position: absolute;
+		top: 0;
+		left: 0;
 		width: 100%;
 		height: 100%;
 		object-fit: cover;
-		transition: transform 0.5s ease;
+		transition: transform 0.3s;
 	}
 
 	.anime-card:hover .card-image img {
-		transform: scale(1.1);
+		transform: scale(1.05);
 	}
 
 	.card-overlay {
 		position: absolute;
 		inset: 0;
-		background: linear-gradient(to top, rgba(0,0,0,0.8) 0%, transparent 60%);
+		background: rgba(0,0,0,0.5);
 		display: flex;
 		align-items: center;
 		justify-content: center;
 		opacity: 0;
-		transition: opacity 0.3s ease;
+		transition: opacity 0.2s;
+		color: #fff;
 	}
 
 	.anime-card:hover .card-overlay {
 		opacity: 1;
 	}
 
-	.play-button {
-		width: 56px;
-		height: 56px;
-		background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
-		border-radius: 50%;
-		display: flex;
-		align-items: center;
-		justify-content: center;
-		color: white;
-		transform: scale(0.8);
-		transition: transform 0.3s ease;
-	}
-
-	.anime-card:hover .play-button {
-		transform: scale(1);
-	}
-
 	.episode-badge {
 		position: absolute;
-		top: 12px;
-		left: 12px;
-		padding: 6px 12px;
-		background: linear-gradient(135deg, #10b981 0%, #059669 100%);
-		border-radius: 20px;
-		color: white;
-		font-size: 12px;
-		font-weight: 700;
+		bottom: 8px;
+		left: 8px;
+		padding: 3px 8px;
+		background: #dc2626;
+		color: #fff;
+		font-size: 10px;
+		font-weight: 600;
+		border-radius: 2px;
 	}
 
 	.day-badge {
 		position: absolute;
-		top: 12px;
-		right: 12px;
-		padding: 6px 12px;
-		background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
-		border-radius: 20px;
-		color: white;
-		font-size: 11px;
-		font-weight: 700;
+		top: 8px;
+		left: 8px;
+		padding: 3px 8px;
+		background: #3b82f6;
+		color: #fff;
+		font-size: 10px;
+		font-weight: 600;
+		border-radius: 2px;
 		text-transform: uppercase;
 	}
 
 	.card-content {
-		padding: 16px;
+		padding: 12px;
 	}
 
 	.card-content h3 {
-		color: #f8fafc;
-		font-size: 14px;
-		font-weight: 600;
-		margin: 0 0 8px;
+		color: #e4e4e7;
+		font-size: 13px;
+		font-weight: 500;
+		margin: 0 0 4px;
 		display: -webkit-box;
 		-webkit-line-clamp: 2;
 		line-clamp: 2;
@@ -278,85 +231,77 @@
 		line-height: 1.4;
 	}
 
+	.anime-card:hover .card-content h3 {
+		color: #facc15;
+	}
+
 	.release-date {
-		display: inline-block;
-		color: rgba(248, 250, 252, 0.6);
-		font-size: 12px;
-		font-weight: 500;
+		font-size: 11px;
+		color: #71717a;
 	}
 
 	.pagination {
 		display: flex;
 		justify-content: center;
 		align-items: center;
-		gap: 20px;
+		gap: 16px;
 		flex-wrap: wrap;
 	}
 
 	.pagination-btn {
-		display: flex;
-		align-items: center;
-		gap: 8px;
-		padding: 12px 24px;
-		background: rgba(99, 102, 241, 0.15);
-		border: 1px solid rgba(99, 102, 241, 0.3);
-		border-radius: 12px;
-		color: #818cf8;
-		font-size: 14px;
-		font-weight: 600;
+		padding: 10px 20px;
+		background: #27272a;
+		border: 1px solid #3f3f46;
+		border-radius: 6px;
+		color: #a1a1aa;
+		font-size: 13px;
+		font-weight: 500;
 		cursor: pointer;
-		transition: all 0.3s ease;
+		transition: all 0.2s;
 	}
 
 	.pagination-btn:hover {
-		background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
-		color: white;
-		border-color: transparent;
+		background: #3f3f46;
+		color: #f4f4f5;
 	}
 
 	.page-info {
-		color: rgba(248, 250, 252, 0.6);
-		font-size: 14px;
-		font-weight: 500;
+		color: #71717a;
+		font-size: 13px;
 	}
 
 	.empty-container {
 		text-align: center;
-		padding: 80px 40px;
-		background: rgba(26, 26, 46, 0.8);
-		backdrop-filter: blur(10px);
-		border-radius: 20px;
-		border: 1px solid rgba(255, 255, 255, 0.05);
-	}
-
-	.empty-container svg {
-		color: rgba(248, 250, 252, 0.3);
-		margin-bottom: 24px;
+		padding: 60px 40px;
+		background: #18181b;
+		border-radius: 8px;
 	}
 
 	.empty-container h3 {
-		color: #f8fafc;
-		font-size: 24px;
+		color: #f4f4f5;
+		font-size: 20px;
 		margin: 0 0 8px;
 	}
 
 	.empty-container p {
-		color: rgba(248, 250, 252, 0.6);
+		color: #71717a;
 		margin: 0;
 	}
 
 	@media (max-width: 768px) {
 		.ongoing-page {
-			padding: 80px 16px 100px;
+			padding: 72px 16px 80px;
 		}
 
-		.page-header h1 {
-			font-size: 28px;
+		.section-header {
+			flex-direction: column;
+			align-items: flex-start;
+			gap: 4px;
 		}
 
 		.anime-grid {
-			grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
-			gap: 16px;
+			grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+			gap: 12px;
 		}
 
 		.pagination {
@@ -364,8 +309,8 @@
 		}
 
 		.pagination-btn {
-			padding: 10px 16px;
-			font-size: 13px;
+			padding: 8px 14px;
+			font-size: 12px;
 		}
 	}
 </style>

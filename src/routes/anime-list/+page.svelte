@@ -50,25 +50,15 @@
 <Navigation />
 
 <main class="anime-list-page">
-	<div class="page-header">
-		<div class="header-icon">
-			<svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-				<rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/>
-			</svg>
-		</div>
-		<h1>Daftar Anime</h1>
-		<p>Jelajahi koleksi anime lengkap dengan filter</p>
+	<div class="section-header">
+		<h2>Daftar Anime</h2>
+		<span class="subtitle">Jelajahi koleksi anime lengkap dengan filter</span>
 	</div>
 
 	<!-- Filter Section -->
 	<div class="filter-section">
 		<div class="filter-group">
-			<label for="genre-select">
-				<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-					<path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/><line x1="7" y1="7" x2="7.01" y2="7"/>
-				</svg>
-				Genre
-			</label>
+			<label for="genre-select">Genre</label>
 			<select id="genre-select" value={filters.genre} on:change={(e) => {
 				window.location.href = buildFilterUrl(e.currentTarget.value, filters.status, 1);
 			}}>
@@ -80,12 +70,7 @@
 		</div>
 
 		<div class="filter-group">
-			<label for="status-select">
-				<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-					<path d="M12 20V10"/><path d="M18 20V4"/><path d="M6 20v-4"/>
-				</svg>
-				Status
-			</label>
+			<label for="status-select">Status</label>
 			<select id="status-select" value={filters.status} on:change={(e) => {
 				window.location.href = buildFilterUrl(filters.genre, e.currentTarget.value, 1);
 			}}>
@@ -97,20 +82,12 @@
 		</div>
 
 		{#if filters.genre || filters.status}
-			<a href="/anime-list" class="reset-btn">
-				<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-					<path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/>
-				</svg>
-				Reset Filter
-			</a>
+			<a href="/anime-list" class="reset-btn">Reset Filter</a>
 		{/if}
 	</div>
 
 	{#if error}
 		<div class="error-container">
-			<svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-				<circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>
-			</svg>
 			<p>{error}</p>
 		</div>
 	{:else if animeList && animeList.length > 0}
@@ -123,22 +100,20 @@
 							alt={anime.title}
 							loading="lazy"
 							on:error={(e) => {
-								(e.currentTarget as HTMLImageElement).src = 'https://via.placeholder.com/247x350/1a1a2e/6366f1?text=No+Image';
+								(e.currentTarget as HTMLImageElement).src = 'https://via.placeholder.com/247x350/18181b/52525b?text=No+Image';
 							}}
 						/>
 						<div class="card-overlay">
-							<div class="view-button">
-								<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-									<path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>
-								</svg>
-							</div>
+							<svg width="32" height="32" viewBox="0 0 24 24" fill="currentColor">
+								<polygon points="5 3 19 12 5 21 5 3"/>
+							</svg>
 						</div>
-					</div>
-					<div class="card-content">
-						<h3>{anime.title}</h3>
 						{#if anime.type}
 							<span class="type-badge">{anime.type}</span>
 						{/if}
+					</div>
+					<div class="card-content">
+						<h3>{anime.title}</h3>
 					</div>
 				</a>
 			{/each}
@@ -150,14 +125,10 @@
 				<div class="pagination-controls">
 					{#if pagination.currentPage > 1}
 						<button class="pagination-btn" on:click={() => goToPage(1)}>
-							<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-								<polyline points="11 17 6 12 11 7"/><polyline points="18 17 13 12 18 7"/>
-							</svg>
+							««
 						</button>
 						<button class="pagination-btn" on:click={() => goToPage(pagination.currentPage - 1)}>
-							<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-								<path d="M19 12H5M12 19l-7-7 7-7"/>
-							</svg>
+							«
 						</button>
 					{/if}
 
@@ -180,14 +151,10 @@
 
 					{#if pagination.currentPage < pagination.totalPages}
 						<button class="pagination-btn" on:click={() => goToPage(pagination.currentPage + 1)}>
-							<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-								<path d="M5 12h14M12 5l7 7-7 7"/>
-							</svg>
+							»
 						</button>
 						<button class="pagination-btn" on:click={() => goToPage(pagination.totalPages)}>
-							<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-								<polyline points="13 17 18 12 13 7"/><polyline points="6 17 11 12 6 7"/>
-							</svg>
+							»»
 						</button>
 					{/if}
 				</div>
@@ -202,9 +169,6 @@
 		{/if}
 	{:else}
 		<div class="empty-container">
-			<svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-				<rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/>
-			</svg>
 			<h3>Tidak ada anime</h3>
 			<p>Tidak ditemukan anime dengan filter yang dipilih</p>
 			<a href="/anime-list" class="reset-link">Reset Filter</a>
@@ -216,52 +180,40 @@
 
 <style>
 	.anime-list-page {
-		min-height: 100vh;
-		padding: 130px 24px 60px;
 		max-width: 1400px;
 		margin: 0 auto;
+		padding: 120px 24px 40px;
 	}
 
-	.page-header {
-		text-align: center;
-		margin-bottom: 40px;
-	}
-
-	.header-icon {
-		display: inline-flex;
+	.section-header {
+		display: flex;
 		align-items: center;
-		justify-content: center;
-		width: 64px;
-		height: 64px;
-		background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
-		border-radius: 16px;
-		color: white;
+		justify-content: space-between;
 		margin-bottom: 20px;
+		padding-bottom: 12px;
+		border-bottom: 1px solid #27272a;
 	}
 
-	.page-header h1 {
-		font-size: 36px;
-		font-weight: 800;
-		color: #f8fafc;
-		margin: 0 0 8px;
-	}
-
-	.page-header p {
-		color: rgba(248, 250, 252, 0.6);
-		font-size: 16px;
+	.section-header h2 {
+		font-size: 18px;
+		font-weight: 600;
+		color: #f4f4f5;
 		margin: 0;
+	}
+
+	.subtitle {
+		color: #71717a;
+		font-size: 13px;
 	}
 
 	/* Filter Section */
 	.filter-section {
 		display: flex;
-		gap: 20px;
-		margin-bottom: 40px;
-		padding: 24px;
-		background: rgba(26, 26, 46, 0.8);
-		backdrop-filter: blur(10px);
-		border-radius: 16px;
-		border: 1px solid rgba(255, 255, 255, 0.05);
+		gap: 16px;
+		margin-bottom: 24px;
+		padding: 16px;
+		background: #18181b;
+		border-radius: 8px;
 		flex-wrap: wrap;
 		align-items: flex-end;
 	}
@@ -269,81 +221,65 @@
 	.filter-group {
 		display: flex;
 		flex-direction: column;
-		gap: 8px;
+		gap: 6px;
 	}
 
 	.filter-group label {
-		display: flex;
-		align-items: center;
-		gap: 8px;
-		font-weight: 600;
-		color: rgba(248, 250, 252, 0.7);
-		font-size: 13px;
-	}
-
-	.filter-group label svg {
-		color: #818cf8;
+		font-weight: 500;
+		color: #71717a;
+		font-size: 12px;
+		text-transform: uppercase;
+		letter-spacing: 0.5px;
 	}
 
 	.filter-group select {
-		padding: 12px 16px;
-		background: rgba(255, 255, 255, 0.05);
-		border: 1px solid rgba(255, 255, 255, 0.1);
-		border-radius: 10px;
-		color: #f8fafc;
+		padding: 10px 14px;
+		background: #27272a;
+		border: 1px solid #3f3f46;
+		border-radius: 6px;
+		color: #f4f4f5;
 		font-size: 14px;
 		cursor: pointer;
-		transition: all 0.3s ease;
-		min-width: 180px;
+		transition: all 0.2s;
+		min-width: 160px;
 	}
 
 	.filter-group select:hover {
-		border-color: rgba(99, 102, 241, 0.5);
+		border-color: #52525b;
 	}
 
 	.filter-group select:focus {
 		outline: none;
-		border-color: #6366f1;
-		box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.2);
+		border-color: #facc15;
 	}
 
 	.filter-group select option {
-		background: #1a1a2e;
-		color: #f8fafc;
+		background: #27272a;
+		color: #f4f4f5;
 	}
 
 	.reset-btn {
-		display: flex;
-		align-items: center;
-		gap: 8px;
-		padding: 12px 20px;
-		background: rgba(244, 63, 94, 0.15);
-		border: 1px solid rgba(244, 63, 94, 0.3);
-		border-radius: 10px;
-		color: #f43f5e;
+		padding: 10px 16px;
+		background: #dc2626;
+		border: none;
+		border-radius: 6px;
+		color: #fff;
 		text-decoration: none;
-		font-size: 14px;
-		font-weight: 600;
-		transition: all 0.3s ease;
+		font-size: 13px;
+		font-weight: 500;
+		transition: all 0.2s;
 	}
 
 	.reset-btn:hover {
-		background: #f43f5e;
-		color: white;
-		border-color: transparent;
+		background: #ef4444;
 	}
 
 	.error-container {
 		text-align: center;
-		padding: 60px 40px;
-		background: rgba(244, 63, 94, 0.1);
-		border: 1px solid rgba(244, 63, 94, 0.2);
-		border-radius: 20px;
-		color: #f43f5e;
-	}
-
-	.error-container svg {
-		margin-bottom: 16px;
+		padding: 40px;
+		background: #18181b;
+		border-radius: 8px;
+		color: #dc2626;
 	}
 
 	.error-container p {
@@ -352,84 +288,84 @@
 
 	.anime-grid {
 		display: grid;
-		grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
-		gap: 24px;
-		margin-bottom: 48px;
+		grid-template-columns: repeat(auto-fill, minmax(155px, 1fr));
+		gap: 16px;
+		margin-bottom: 32px;
 	}
 
 	.anime-card {
-		background: rgba(26, 26, 46, 0.8);
-		border-radius: 16px;
+		background: #18181b;
+		border-radius: 6px;
 		overflow: hidden;
 		text-decoration: none;
-		transition: all 0.3s ease;
-		border: 1px solid rgba(255, 255, 255, 0.05);
+		transition: transform 0.2s, box-shadow 0.2s;
 	}
 
 	.anime-card:hover {
-		transform: translateY(-8px);
-		box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
-		border-color: rgba(99, 102, 241, 0.3);
+		transform: translateY(-4px);
+		box-shadow: 0 8px 24px rgba(0,0,0,0.4);
 	}
 
 	.card-image {
 		position: relative;
-		aspect-ratio: 3/4;
+		width: 100%;
+		padding-top: 142%;
+		background: #27272a;
 		overflow: hidden;
 	}
 
 	.card-image img {
+		position: absolute;
+		top: 0;
+		left: 0;
 		width: 100%;
 		height: 100%;
 		object-fit: cover;
-		transition: transform 0.5s ease;
+		transition: transform 0.3s;
 	}
 
 	.anime-card:hover .card-image img {
-		transform: scale(1.1);
+		transform: scale(1.05);
 	}
 
 	.card-overlay {
 		position: absolute;
 		inset: 0;
-		background: linear-gradient(to top, rgba(0,0,0,0.8) 0%, transparent 60%);
+		background: rgba(0,0,0,0.5);
 		display: flex;
 		align-items: center;
 		justify-content: center;
 		opacity: 0;
-		transition: opacity 0.3s ease;
+		transition: opacity 0.2s;
+		color: #fff;
 	}
 
 	.anime-card:hover .card-overlay {
 		opacity: 1;
 	}
 
-	.view-button {
-		width: 48px;
-		height: 48px;
-		background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
-		border-radius: 50%;
-		display: flex;
-		align-items: center;
-		justify-content: center;
-		color: white;
-		transform: scale(0.8);
-		transition: transform 0.3s ease;
-	}
-
-	.anime-card:hover .view-button {
-		transform: scale(1);
+	.type-badge {
+		position: absolute;
+		top: 8px;
+		left: 8px;
+		padding: 3px 8px;
+		background: #facc15;
+		color: #0f0f0f;
+		font-size: 10px;
+		font-weight: 600;
+		border-radius: 2px;
+		text-transform: uppercase;
 	}
 
 	.card-content {
-		padding: 16px;
+		padding: 12px;
 	}
 
 	.card-content h3 {
-		color: #f8fafc;
-		font-size: 14px;
-		font-weight: 600;
-		margin: 0 0 8px;
+		color: #e4e4e7;
+		font-size: 13px;
+		font-weight: 500;
+		margin: 0;
 		display: -webkit-box;
 		-webkit-line-clamp: 2;
 		line-clamp: 2;
@@ -438,14 +374,8 @@
 		line-height: 1.4;
 	}
 
-	.type-badge {
-		display: inline-block;
-		padding: 4px 10px;
-		background: rgba(99, 102, 241, 0.15);
-		border-radius: 6px;
-		color: #818cf8;
-		font-size: 11px;
-		font-weight: 600;
+	.anime-card:hover .card-content h3 {
+		color: #facc15;
 	}
 
 	/* Pagination */
@@ -453,33 +383,33 @@
 		display: flex;
 		flex-direction: column;
 		align-items: center;
-		gap: 16px;
+		gap: 12px;
 	}
 
 	.pagination-controls {
 		display: flex;
 		align-items: center;
-		gap: 8px;
+		gap: 6px;
 	}
 
 	.pagination-btn {
 		display: flex;
 		align-items: center;
 		justify-content: center;
-		width: 40px;
-		height: 40px;
-		background: rgba(255, 255, 255, 0.05);
-		border: 1px solid rgba(255, 255, 255, 0.1);
-		border-radius: 10px;
-		color: rgba(248, 250, 252, 0.7);
+		width: 36px;
+		height: 36px;
+		background: #27272a;
+		border: 1px solid #3f3f46;
+		border-radius: 6px;
+		color: #a1a1aa;
 		cursor: pointer;
-		transition: all 0.3s ease;
+		transition: all 0.2s;
+		font-size: 14px;
 	}
 
 	.pagination-btn:hover {
-		background: rgba(99, 102, 241, 0.2);
-		border-color: rgba(99, 102, 241, 0.4);
-		color: #818cf8;
+		background: #3f3f46;
+		color: #f4f4f5;
 	}
 
 	.page-numbers {
@@ -488,92 +418,85 @@
 	}
 
 	.page-number {
-		width: 40px;
-		height: 40px;
-		background: rgba(255, 255, 255, 0.05);
-		border: 1px solid rgba(255, 255, 255, 0.1);
-		border-radius: 10px;
-		color: rgba(248, 250, 252, 0.7);
-		font-size: 14px;
-		font-weight: 600;
+		width: 36px;
+		height: 36px;
+		background: #27272a;
+		border: 1px solid #3f3f46;
+		border-radius: 6px;
+		color: #a1a1aa;
+		font-size: 13px;
+		font-weight: 500;
 		cursor: pointer;
-		transition: all 0.3s ease;
+		transition: all 0.2s;
 	}
 
 	.page-number:hover {
-		background: rgba(99, 102, 241, 0.2);
-		border-color: rgba(99, 102, 241, 0.4);
-		color: #818cf8;
+		background: #3f3f46;
+		color: #f4f4f5;
 	}
 
 	.page-number.active {
-		background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
-		border-color: transparent;
-		color: white;
+		background: #facc15;
+		border-color: #facc15;
+		color: #0f0f0f;
 	}
 
 	.pagination-info {
-		color: rgba(248, 250, 252, 0.6);
-		font-size: 14px;
+		color: #71717a;
+		font-size: 13px;
 	}
 
 	.total-items {
-		color: rgba(248, 250, 252, 0.4);
+		color: #52525b;
 	}
 
 	.empty-container {
 		text-align: center;
-		padding: 80px 40px;
-		background: rgba(26, 26, 46, 0.8);
-		backdrop-filter: blur(10px);
-		border-radius: 20px;
-		border: 1px solid rgba(255, 255, 255, 0.05);
-	}
-
-	.empty-container svg {
-		color: rgba(248, 250, 252, 0.3);
-		margin-bottom: 24px;
+		padding: 60px 40px;
+		background: #18181b;
+		border-radius: 8px;
 	}
 
 	.empty-container h3 {
-		color: #f8fafc;
-		font-size: 24px;
+		color: #f4f4f5;
+		font-size: 20px;
 		margin: 0 0 8px;
 	}
 
 	.empty-container p {
-		color: rgba(248, 250, 252, 0.6);
-		margin: 0 0 24px;
+		color: #71717a;
+		margin: 0 0 20px;
 	}
 
 	.reset-link {
 		display: inline-block;
-		padding: 12px 24px;
-		background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
-		color: white;
+		padding: 10px 20px;
+		background: #facc15;
+		color: #0f0f0f;
 		text-decoration: none;
-		border-radius: 12px;
+		border-radius: 6px;
 		font-weight: 600;
-		transition: all 0.3s ease;
+		transition: all 0.2s;
 	}
 
 	.reset-link:hover {
-		transform: translateY(-2px);
-		box-shadow: 0 8px 25px rgba(99, 102, 241, 0.4);
+		background: #fde047;
 	}
 
 	@media (max-width: 768px) {
 		.anime-list-page {
-			padding: 80px 16px 100px;
+			padding: 72px 16px 80px;
 		}
 
-		.page-header h1 {
-			font-size: 28px;
+		.section-header {
+			flex-direction: column;
+			align-items: flex-start;
+			gap: 4px;
 		}
 
 		.filter-section {
 			flex-direction: column;
-			gap: 16px;
+			gap: 12px;
 		}
 
 		.filter-group {
@@ -586,12 +509,12 @@
 
 		.reset-btn {
 			width: 100%;
-			justify-content: center;
+			text-align: center;
 		}
 
 		.anime-grid {
-			grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
-			gap: 16px;
+			grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+			gap: 12px;
 		}
 
 		.pagination-controls {

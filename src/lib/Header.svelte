@@ -4,7 +4,6 @@
 	let isScrolled = false;
 
 	onMount(() => {
-		// Handle scroll effect
 		const handleScroll = () => {
 			isScrolled = window.scrollY > 20;
 		};
@@ -24,282 +23,175 @@
 	}
 </script>
 
-<!-- Header -->
-<header class="header" class:scrolled={isScrolled}>
-	<div class="header-container">
-		<!-- Logo -->
+<header class:scrolled={isScrolled}>
+	<div class="container">
 		<a href="/" class="logo">
-			<span class="logo-icon"><img src="" alt=""></span>
-			<span class="logo-text">Kuma<span class="logo-accent">Stream</span></span>
+			<span class="logo-text">Kuma<span class="accent">Stream</span></span>
 		</a>
 
-		<!-- Search Box -->
-		<div class="search-box">
-			<form on:submit={handleSearch}>
-				<div class="search-input-wrapper">
-					<svg class="search-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-						<circle cx="11" cy="11" r="8"/>
-						<path d="M21 21l-4.35-4.35"/>
-					</svg>
-					<input 
-						type="text" 
-						id="q" 
-						name="q" 
-						placeholder="Search anime..." 
-						autocomplete="off" 
-					/>
-				</div>
-				<button type="submit" class="search-btn" aria-label="Search">
-					<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-						<path d="M5 12h14M12 5l7 7-7 7"/>
-					</svg>
-				</button>
-			</form>
-		</div>
+		<form class="search" on:submit={handleSearch}>
+			<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18">
+				<circle cx="11" cy="11" r="8"/>
+				<path d="M21 21l-4.35-4.35"/>
+			</svg>
+			<input 
+				type="text" 
+				id="q" 
+				name="q" 
+				placeholder="Search anime..." 
+				autocomplete="off" 
+			/>
+		</form>
 
-		<!-- Right Section -->
-		<div class="header-actions">
-			<!-- Dark Mode Indicator -->
-			<div class="theme-indicator" aria-label="Dark mode enabled">
-				<svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
-					<path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
-				</svg>
-			</div>
-		</div>
+		<a href="/history" class="icon-btn" aria-label="History">
+			<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20">
+				<circle cx="12" cy="12" r="10"/>
+				<polyline points="12 6 12 12 16 14"/>
+			</svg>
+		</a>
 	</div>
 </header>
 
 <style>
-	.header {
+	header {
 		position: fixed;
 		top: 0;
 		left: 0;
 		right: 0;
-		height: 70px;
+		height: 64px;
 		z-index: 1000;
-		background: rgba(15, 15, 35, 0.8);
-		backdrop-filter: blur(20px);
-		-webkit-backdrop-filter: blur(20px);
-		border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-		transition: all 0.3s ease;
+		background: #0f0f0f;
+		border-bottom: 1px solid #27272a;
+		transition: background 0.2s;
 	}
 
-	.header.scrolled {
-		background: rgba(15, 15, 35, 0.95);
-		box-shadow: 0 4px 30px rgba(0, 0, 0, 0.3);
+	header.scrolled {
+		background: rgba(15, 15, 15, 0.95);
+		backdrop-filter: blur(8px);
 	}
 
-	.header-container {
+	.container {
 		max-width: 1400px;
 		height: 100%;
 		margin: 0 auto;
 		padding: 0 24px;
 		display: flex;
 		align-items: center;
-		gap: 32px;
+		gap: 24px;
 	}
 
-	/* Logo */
 	.logo {
 		display: flex;
 		align-items: center;
-		gap: 10px;
 		text-decoration: none;
 		flex-shrink: 0;
 	}
 
-	.logo-icon {
-		font-size: 28px;
-		animation: pulse 2s ease-in-out infinite;
-	}
-
-	@keyframes pulse {
-		0%, 100% { transform: scale(1); }
-		50% { transform: scale(1.1); }
-	}
-
 	.logo-text {
-		font-size: 22px;
-		font-weight: 800;
-		color: #f8fafc;
-		letter-spacing: -0.5px;
+		font-size: 20px;
+		font-weight: 700;
+		color: #f4f4f5;
 	}
 
-	.logo-accent {
-		background: linear-gradient(135deg, #6366f1 0%, #a855f7 100%);
-		-webkit-background-clip: text;
-		-webkit-text-fill-color: transparent;
-		background-clip: text;
+	.accent {
+		color: #facc15;
 	}
 
-	/* Search Box */
-	.search-box {
+	.search {
 		flex: 1;
-		max-width: 500px;
-	}
-
-	.search-box form {
+		max-width: 420px;
+		position: relative;
 		display: flex;
 		align-items: center;
-		gap: 8px;
 	}
 
-	.search-input-wrapper {
-		flex: 1;
-		position: relative;
-	}
-
-	.search-icon {
+	.search svg {
 		position: absolute;
-		left: 16px;
-		top: 50%;
-		transform: translateY(-50%);
-		width: 18px;
-		height: 18px;
-		max-width: 18px;
-		max-height: 18px;
-		color: rgba(248, 250, 252, 0.4);
+		left: 12px;
+		color: #52525b;
 		pointer-events: none;
-		flex-shrink: 0;
 	}
 
-	.search-box input {
+	.search input {
 		width: 100%;
-		height: 46px;
-		padding: 0 20px 0 50px;
+		height: 40px;
+		padding: 0 16px 0 42px;
 		font-family: inherit;
 		font-size: 14px;
-		color: #f8fafc;
-		background: rgba(255, 255, 255, 0.06);
-		border: 1px solid rgba(255, 255, 255, 0.08);
-		border-radius: 25px;
+		color: #f4f4f5;
+		background: #18181b;
+		border: 1px solid #27272a;
+		border-radius: 6px;
 		outline: none;
-		transition: all 0.3s ease;
+		transition: border-color 0.2s;
 	}
 
-	.search-box input::placeholder {
-		color: rgba(248, 250, 252, 0.4);
+	.search input::placeholder {
+		color: #52525b;
 	}
 
-	.search-box input:focus {
-		background: rgba(255, 255, 255, 0.1);
-		border-color: rgba(99, 102, 241, 0.5);
-		box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.1);
+	.search input:focus {
+		border-color: #3f3f46;
 	}
 
-	.search-btn {
-		width: 46px;
-		height: 46px;
-		border-radius: 50%;
-		background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
-		border: none;
-		cursor: pointer;
+	.icon-btn {
+		width: 40px;
+		height: 40px;
 		display: flex;
 		align-items: center;
 		justify-content: center;
-		transition: all 0.3s ease;
-		flex-shrink: 0;
+		color: #a1a1aa;
+		background: #18181b;
+		border: 1px solid #27272a;
+		border-radius: 6px;
+		text-decoration: none;
+		transition: all 0.2s;
 	}
 
-	.search-btn svg {
-		width: 18px;
-		height: 18px;
-		color: white;
+	.icon-btn:hover {
+		color: #f4f4f5;
+		border-color: #3f3f46;
 	}
 
-	.search-btn:hover {
-		transform: scale(1.05);
-		box-shadow: 0 4px 20px rgba(99, 102, 241, 0.4);
-	}
-
-	/* Header Actions */
-	.header-actions {
-		display: flex;
-		align-items: center;
-		gap: 12px;
-		flex-shrink: 0;
-	}
-
-	.theme-indicator {
-		width: 44px;
-		height: 44px;
-		border-radius: 50%;
-		background: rgba(99, 102, 241, 0.15);
-		border: 1px solid rgba(99, 102, 241, 0.3);
-		display: flex;
-		align-items: center;
-		justify-content: center;
-		color: #818cf8;
-	}
-
-	/* Responsive */
-	@media (max-width: 800px) {
-		.header {
-			height: 60px;
+	@media (max-width: 768px) {
+		header {
+			height: 56px;
 		}
 
-		.header-container {
+		.container {
 			padding: 0 16px;
-			gap: 16px;
+			gap: 12px;
 		}
 
 		.logo-text {
-			display: none;
+			font-size: 18px;
 		}
 
-		.logo-icon {
-			font-size: 24px;
-		}
-
-		.search-box {
+		.search {
 			max-width: none;
 		}
 
-		.search-box input {
-			height: 42px;
-			padding: 0 16px 0 44px;
+		.search input {
+			height: 36px;
+			font-size: 13px;
 		}
 
-		.search-icon {
-			left: 14px;
-			width: 16px;
-			height: 16px;
-		}
-
-		.search-btn {
-			width: 42px;
-			height: 42px;
-		}
-
-		.theme-indicator {
-			width: 40px;
-			height: 40px;
+		.icon-btn {
+			width: 36px;
+			height: 36px;
 		}
 	}
 
 	@media (max-width: 480px) {
-		.header-container {
-			gap: 10px;
+		.logo-text {
+			display: none;
 		}
 
-		.search-box input {
-			height: 38px;
-			font-size: 13px;
-		}
-
-		.search-btn {
-			width: 38px;
-			height: 38px;
-		}
-
-		.search-btn svg {
-			width: 16px;
-			height: 16px;
-		}
-
-		.theme-indicator {
-			width: 36px;
-			height: 36px;
+		.logo::before {
+			content: 'KS';
+			font-size: 18px;
+			font-weight: 700;
+			color: #facc15;
 		}
 	}
 </style>

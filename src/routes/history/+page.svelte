@@ -52,21 +52,13 @@
 <Navigation />
 
 <main class="history-page">
-	<div class="page-header">
-		<div class="header-icon">
-			<svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-				<circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>
-			</svg>
-		</div>
-		<div class="header-content">
-			<h1>Riwayat Tonton</h1>
-			<p>Daftar anime yang pernah kamu tonton</p>
+	<div class="section-header">
+		<div class="header-left">
+			<h2>Riwayat Tonton</h2>
+			<span class="subtitle">Daftar anime yang pernah kamu tonton</span>
 		</div>
 		{#if history.length > 0}
 			<button class="clear-btn" on:click={clearAllHistory}>
-				<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-					<polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>
-				</svg>
 				Hapus Semua
 			</button>
 		{/if}
@@ -74,19 +66,9 @@
 
 	{#if history.length === 0}
 		<div class="empty-state">
-			<div class="empty-icon">
-				<svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-					<circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>
-				</svg>
-			</div>
-			<h2>Belum Ada Riwayat</h2>
+			<h3>Belum Ada Riwayat</h3>
 			<p>Anime yang kamu tonton akan muncul di sini</p>
-			<a href="/" class="browse-btn">
-				<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-					<polygon points="5 3 19 12 5 21 5 3"/>
-				</svg>
-				Mulai Menonton
-			</a>
+			<a href="/" class="browse-btn">Mulai Menonton</a>
 		</div>
 	{:else}
 		<div class="history-grid">
@@ -98,14 +80,14 @@
 								<img src={item.thumbnail} alt={item.title} loading="lazy" />
 							{:else}
 								<div class="no-thumbnail">
-									<svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+									<svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
 										<polygon points="5 3 19 12 5 21 5 3"/>
 									</svg>
 								</div>
 							{/if}
-							<div class="episode-badge">EP {item.episode}</div>
+							<span class="episode-badge">EP {item.episode}</span>
 							<div class="play-overlay">
-								<svg width="40" height="40" viewBox="0 0 24 24" fill="currentColor">
+								<svg width="28" height="28" viewBox="0 0 24 24" fill="currentColor">
 									<polygon points="5 3 19 12 5 21 5 3"/>
 								</svg>
 							</div>
@@ -113,18 +95,11 @@
 						<div class="card-info">
 							<h3 class="anime-title">{item.seriesName}</h3>
 							<p class="episode-title">{item.title}</p>
-							<div class="watched-time">
-								<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-									<circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>
-								</svg>
-								{formatDate(item.watchedAt)}
-							</div>
+							<span class="watched-time">{formatDate(item.watchedAt)}</span>
 						</div>
 					</a>
 					<button class="remove-btn" on:click={() => removeFromHistory(item.slug)} title="Hapus dari riwayat">
-						<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-							<line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
-						</svg>
+						✕
 					</button>
 				</div>
 			{/each}
@@ -136,133 +111,103 @@
 
 <style>
 	.history-page {
-		min-height: 100vh;
-		padding: 130px 24px 60px;
 		max-width: 1400px;
 		margin: 0 auto;
+		padding: 120px 24px 40px;
 	}
 
-	.page-header {
+	.section-header {
 		display: flex;
 		align-items: center;
-		gap: 20px;
-		margin-bottom: 40px;
+		justify-content: space-between;
+		margin-bottom: 20px;
+		padding-bottom: 12px;
+		border-bottom: 1px solid #27272a;
 		flex-wrap: wrap;
+		gap: 12px;
 	}
 
-	.header-icon {
-		width: 64px;
-		height: 64px;
-		background: linear-gradient(135deg, rgba(99, 102, 241, 0.2) 0%, rgba(139, 92, 246, 0.1) 100%);
-		border-radius: 16px;
-		display: flex;
-		align-items: center;
-		justify-content: center;
-		color: #818cf8;
+	.header-left h2 {
+		font-size: 18px;
+		font-weight: 600;
+		color: #f4f4f5;
+		margin: 0 0 4px;
 	}
 
-	.header-content {
-		flex: 1;
-	}
-
-	.header-content h1 {
-		font-size: 28px;
-		font-weight: 700;
-		color: #f8fafc;
-		margin: 0 0 4px 0;
-	}
-
-	.header-content p {
-		color: rgba(248, 250, 252, 0.6);
-		margin: 0;
-		font-size: 14px;
+	.subtitle {
+		color: #71717a;
+		font-size: 13px;
 	}
 
 	.clear-btn {
-		display: flex;
-		align-items: center;
-		gap: 8px;
-		padding: 12px 20px;
-		background: rgba(244, 63, 94, 0.15);
-		border: 1px solid rgba(244, 63, 94, 0.3);
-		border-radius: 10px;
-		color: #f43f5e;
-		font-size: 14px;
-		font-weight: 600;
+		padding: 8px 16px;
+		background: #dc2626;
+		border: none;
+		border-radius: 6px;
+		color: #fff;
+		font-size: 13px;
+		font-weight: 500;
 		cursor: pointer;
-		transition: all 0.3s ease;
+		transition: all 0.2s;
 	}
 
 	.clear-btn:hover {
-		background: #f43f5e;
-		color: white;
-		border-color: transparent;
+		background: #ef4444;
 	}
 
 	/* Empty State */
 	.empty-state {
 		text-align: center;
-		padding: 80px 40px;
-		background: rgba(26, 26, 46, 0.6);
-		border-radius: 20px;
-		border: 1px solid rgba(255, 255, 255, 0.05);
+		padding: 60px 40px;
+		background: #18181b;
+		border-radius: 8px;
 	}
 
-	.empty-icon {
-		color: rgba(248, 250, 252, 0.3);
-		margin-bottom: 24px;
-	}
-
-	.empty-state h2 {
-		font-size: 24px;
-		font-weight: 700;
-		color: #f8fafc;
-		margin: 0 0 12px 0;
+	.empty-state h3 {
+		font-size: 20px;
+		font-weight: 600;
+		color: #f4f4f5;
+		margin: 0 0 8px;
 	}
 
 	.empty-state p {
-		color: rgba(248, 250, 252, 0.5);
-		margin: 0 0 24px 0;
+		color: #71717a;
+		margin: 0 0 20px;
 	}
 
 	.browse-btn {
-		display: inline-flex;
-		align-items: center;
-		gap: 10px;
-		padding: 14px 28px;
-		background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
-		border-radius: 12px;
-		color: white;
+		display: inline-block;
+		padding: 10px 20px;
+		background: #facc15;
+		border-radius: 6px;
+		color: #0f0f0f;
 		font-weight: 600;
 		text-decoration: none;
-		transition: all 0.3s ease;
+		transition: all 0.2s;
 	}
 
 	.browse-btn:hover {
-		transform: translateY(-2px);
-		box-shadow: 0 10px 30px rgba(99, 102, 241, 0.3);
+		background: #fde047;
 	}
 
 	/* History Grid */
 	.history-grid {
 		display: grid;
 		grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-		gap: 20px;
+		gap: 16px;
 	}
 
 	.history-card {
 		position: relative;
-		background: rgba(26, 26, 46, 0.8);
-		border-radius: 16px;
-		border: 1px solid rgba(255, 255, 255, 0.05);
+		background: #18181b;
+		border-radius: 6px;
 		overflow: hidden;
-		transition: all 0.3s ease;
+		transition: all 0.2s;
 	}
 
 	.history-card:hover {
-		transform: translateY(-4px);
-		border-color: rgba(99, 102, 241, 0.3);
-		box-shadow: 0 15px 40px rgba(0, 0, 0, 0.3);
+		transform: translateY(-2px);
+		box-shadow: 0 8px 24px rgba(0,0,0,0.3);
 	}
 
 	.card-link {
@@ -277,39 +222,39 @@
 		height: 100px;
 		flex-shrink: 0;
 		overflow: hidden;
+		background: #27272a;
 	}
 
 	.card-thumbnail img {
 		width: 100%;
 		height: 100%;
 		object-fit: cover;
-		transition: transform 0.5s ease;
+		transition: transform 0.3s;
 	}
 
 	.history-card:hover .card-thumbnail img {
-		transform: scale(1.1);
+		transform: scale(1.05);
 	}
 
 	.no-thumbnail {
 		width: 100%;
 		height: 100%;
-		background: rgba(99, 102, 241, 0.1);
 		display: flex;
 		align-items: center;
 		justify-content: center;
-		color: rgba(248, 250, 252, 0.3);
+		color: #52525b;
 	}
 
 	.episode-badge {
 		position: absolute;
-		top: 8px;
-		left: 8px;
-		background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+		top: 6px;
+		left: 6px;
+		background: #dc2626;
 		color: white;
 		font-size: 10px;
-		font-weight: 700;
-		padding: 4px 8px;
-		border-radius: 6px;
+		font-weight: 600;
+		padding: 2px 6px;
+		border-radius: 2px;
 	}
 
 	.play-overlay {
@@ -320,7 +265,7 @@
 		align-items: center;
 		justify-content: center;
 		opacity: 0;
-		transition: opacity 0.3s ease;
+		transition: opacity 0.2s;
 		color: white;
 	}
 
@@ -330,7 +275,7 @@
 
 	.card-info {
 		flex: 1;
-		padding: 14px;
+		padding: 12px;
 		display: flex;
 		flex-direction: column;
 		justify-content: center;
@@ -338,48 +283,50 @@
 	}
 
 	.anime-title {
-		font-size: 14px;
-		font-weight: 700;
-		color: #f8fafc;
-		margin: 0 0 4px 0;
+		font-size: 13px;
+		font-weight: 600;
+		color: #e4e4e7;
+		margin: 0 0 4px;
 		white-space: nowrap;
 		overflow: hidden;
 		text-overflow: ellipsis;
 	}
 
+	.history-card:hover .anime-title {
+		color: #facc15;
+	}
+
 	.episode-title {
 		font-size: 12px;
-		color: rgba(248, 250, 252, 0.7);
-		margin: 0 0 8px 0;
+		color: #71717a;
+		margin: 0 0 6px;
 		white-space: nowrap;
 		overflow: hidden;
 		text-overflow: ellipsis;
 	}
 
 	.watched-time {
-		display: flex;
-		align-items: center;
-		gap: 6px;
 		font-size: 11px;
-		color: rgba(248, 250, 252, 0.5);
+		color: #52525b;
 	}
 
 	.remove-btn {
 		position: absolute;
-		top: 8px;
-		right: 8px;
-		width: 32px;
-		height: 32px;
+		top: 6px;
+		right: 6px;
+		width: 24px;
+		height: 24px;
 		background: rgba(0, 0, 0, 0.6);
 		border: none;
-		border-radius: 8px;
-		color: rgba(248, 250, 252, 0.7);
+		border-radius: 4px;
+		color: #a1a1aa;
 		cursor: pointer;
 		display: flex;
 		align-items: center;
 		justify-content: center;
 		opacity: 0;
-		transition: all 0.3s ease;
+		transition: all 0.2s;
+		font-size: 12px;
 	}
 
 	.history-card:hover .remove-btn {
@@ -387,29 +334,19 @@
 	}
 
 	.remove-btn:hover {
-		background: #f43f5e;
+		background: #dc2626;
 		color: white;
 	}
 
 	/* Responsive */
 	@media (max-width: 768px) {
 		.history-page {
-			padding: 130px 16px 80px;
+			padding: 72px 16px 80px;
 		}
 
-		.page-header {
+		.section-header {
 			flex-direction: column;
 			align-items: flex-start;
-			gap: 16px;
-		}
-
-		.header-icon {
-			width: 56px;
-			height: 56px;
-		}
-
-		.header-content h1 {
-			font-size: 24px;
 		}
 
 		.history-grid {
@@ -418,7 +355,7 @@
 
 		.card-thumbnail {
 			width: 120px;
-			height: 90px;
+			height: 85px;
 		}
 	}
 </style>

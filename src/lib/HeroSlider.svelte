@@ -31,24 +31,20 @@
 			}
 			const data = await response.json();
 			if (data.success && data.data && Array.isArray(data.data)) {
-				// Ambil 5 anime pertama untuk hero slider
 				heroItems = data.data.slice(0, 5).map((anime: any) => ({
 					title: anime.title || 'Unknown',
-					thumb: anime.thumb || 'https://via.placeholder.com/1200x400/0c70de/ffffff?text=No+Image',
+					thumb: anime.thumb || 'https://via.placeholder.com/1200x400/1a1a2e/ffffff?text=No+Image',
 					status: anime.status || 'Ongoing',
 					type: anime.type || 'TV',
 					description: anime.synopsis || 'Anime terbaru',
 					genres: anime.genres || [],
 					slug: anime.slug
 				}));
-			} else {
-				console.warn('Invalid API response format:', data);
 			}
 		} catch (error) {
 			console.error('Error loading hero slider:', error);
 		}
 
-		// Auto play - hanya jika ada items
 		if (heroItems.length > 0) {
 			autoPlayInterval = setInterval(() => {
 				currentIndex = (currentIndex + 1) % heroItems.length;
@@ -63,42 +59,45 @@
 			currentIndex = (currentIndex + 1) % heroItems.length;
 		}, 5000);
 	}
+
+	function nextSlide() {
+		currentIndex = (currentIndex + 1) % heroItems.length;
+	}
+
+	function prevSlide() {
+		currentIndex = currentIndex === 0 ? heroItems.length - 1 : currentIndex - 1;
+	}
 </script>
 
 {#if heroItems.length > 0}
-	<div class="hero-slider">
-		<div class="hero-container">
+	<section class="hero">
+		<div class="hero-track" style="transform: translateX(-{currentIndex * 100}%)">
 			{#each heroItems as item, index (index)}
-				<div class="hero-slide" class:active={index === currentIndex}>
-					<div
-						class="hero-background"
-						style="background-image: linear-gradient(135deg, rgba(0,0,0,0.7) 0%, rgba(12,112,222,0.3) 100%), url({item.thumb})"
-					></div>
-
-					<div class="hero-content">
-						<div class="hero-text">
-							<h1 class="hero-title">{item.title}</h1>
-
-							<div class="hero-meta">
-								<span class="status-badge ongoing">● {item.status}</span>
-								<span class="type-badge">{item.type}</span>
+				<div class="hero-slide">
+					<img src={item.thumb} alt={item.title} class="hero-bg" />
+					<div class="hero-gradient"></div>
+					<div class="hero-inner">
+						<div class="hero-info">
+							<div class="tags">
+								<span class="tag ongoing">{item.status}</span>
+								<span class="tag type">{item.type}</span>
 							</div>
-
-							<p class="hero-description">{item.description}</p>
-
+							<h2>{item.title}</h2>
+							<p class="desc">{item.description}</p>
 							{#if item.genres && item.genres.length > 0}
-								<div class="hero-genres">
-									{#each item.genres.slice(0, 4) as genre}
-										<span class="genre-badge">{genre}</span>
+								<div class="genres">
+									{#each item.genres.slice(0, 3) as genre}
+										<span>{genre}</span>
 									{/each}
 								</div>
 							{/if}
-
-							<div class="hero-buttons">
-								<a href={`/detail?slug=${encodeURIComponent(item.slug)}`} class="btn btn-primary">
+							<div class="actions">
+								<a href={`/detail?slug=${encodeURIComponent(item.slug)}`} class="btn-watch">
+									<svg viewBox="0 0 24 24" fill="currentColor" width="18" height="18">
+										<polygon points="5 3 19 12 5 21 5 3"/>
+									</svg>
 									Watch Now
 								</a>
-								<button class="btn btn-secondary">Bookmark</button>
 							</div>
 						</div>
 					</div>
@@ -106,231 +105,256 @@
 			{/each}
 		</div>
 
-		<!-- Indicators -->
-		<div class="hero-indicators">
+		<!-- Navigation Arrows -->
+		<button class="nav-arrow prev" on:click={prevSlide} aria-label="Previous">
+			<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+				<polyline points="15 18 9 12 15 6"/>
+			</svg>
+		</button>
+		<button class="nav-arrow next" on:click={nextSlide} aria-label="Next">
+			<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+				<polyline points="9 18 15 12 9 6"/>
+			</svg>
+		</button>
+
+		<!-- Dots -->
+		<div class="dots">
 			{#each heroItems as _, index (index)}
-			<button
-				class="indicator"
-				class:active={index === currentIndex}
-				on:click={() => goToSlide(index)}
-				aria-label={`Go to slide ${index + 1}`}
-			></button>
+				<button
+					class="dot"
+					class:active={index === currentIndex}
+					on:click={() => goToSlide(index)}
+					aria-label={`Slide ${index + 1}`}
+				></button>
 			{/each}
 		</div>
-	</div>
+	</section>
 {/if}
 
 <style>
-	.hero-slider {
+	.hero {
 		position: relative;
 		width: 100%;
-		height: 400px;
+		height: 420px;
 		overflow: hidden;
-		background: #000;
-		margin-top: 20px;
-		margin-bottom: 30px;
+		border-radius: 8px;
+		background: #0f0f0f;
 	}
 
-	.hero-container {
-		position: relative;
-		width: 100%;
+	.hero-track {
+		display: flex;
 		height: 100%;
+		transition: transform 0.5s ease;
 	}
 
 	.hero-slide {
+		min-width: 100%;
+		height: 100%;
+		position: relative;
+	}
+
+	.hero-bg {
 		position: absolute;
 		width: 100%;
 		height: 100%;
-		opacity: 0;
-		transition: opacity 0.8s ease-in-out;
+		object-fit: cover;
 	}
 
-	.hero-slide.active {
-		opacity: 1;
-		z-index: 10;
-	}
-
-	.hero-background {
+	.hero-gradient {
 		position: absolute;
-		width: 100%;
-		height: 100%;
-		background-size: cover;
-		background-position: center;
-		background-repeat: no-repeat;
+		inset: 0;
+		background: linear-gradient(90deg, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.4) 60%, transparent 100%);
 	}
 
-	.hero-content {
+	.hero-inner {
 		position: relative;
 		z-index: 2;
-		width: 100%;
 		height: 100%;
 		display: flex;
 		align-items: center;
-		padding: 40px;
+		padding: 0 48px;
 	}
 
-	.hero-text {
-		max-width: 600px;
+	.hero-info {
+		max-width: 520px;
+	}
+
+	.tags {
+		display: flex;
+		gap: 8px;
+		margin-bottom: 12px;
+	}
+
+	.tag {
+		padding: 4px 12px;
+		font-size: 11px;
+		font-weight: 600;
+		text-transform: uppercase;
+		letter-spacing: 0.5px;
+		border-radius: 2px;
+	}
+
+	.tag.ongoing {
+		background: #22c55e;
 		color: #fff;
 	}
 
-	.hero-title {
-		margin: 0 0 15px 0;
-		font-size: 36px;
+	.tag.type {
+		background: #3b82f6;
+		color: #fff;
+	}
+
+	.hero-info h2 {
+		font-size: 32px;
 		font-weight: 700;
+		color: #fff;
+		margin: 0 0 12px;
 		line-height: 1.2;
-		text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.8);
 	}
 
-	.hero-meta {
-		display: flex;
-		gap: 12px;
-		margin-bottom: 15px;
-		align-items: center;
-	}
-
-	.status-badge {
-		display: inline-block;
-		padding: 6px 12px;
-		border-radius: 4px;
-		font-size: 12px;
-		font-weight: 600;
-		text-transform: uppercase;
-		letter-spacing: 0.5px;
-	}
-
-	.status-badge.ongoing {
-		background: rgba(76, 175, 80, 0.9);
-		color: #fff;
-	}
-
-	.type-badge {
-		display: inline-block;
-		padding: 6px 12px;
-		background: rgba(12, 112, 222, 0.9);
-		color: #fff;
-		border-radius: 4px;
-		font-size: 12px;
-		font-weight: 600;
-		text-transform: uppercase;
-		letter-spacing: 0.5px;
-	}
-
-	.hero-description {
-		margin: 0 0 15px 0;
-		font-size: 15px;
+	.desc {
+		font-size: 14px;
+		color: #a1a1aa;
 		line-height: 1.6;
-		color: #e0e0e0;
-		max-width: 500px;
+		margin: 0 0 16px;
+		display: -webkit-box;
+		-webkit-line-clamp: 3;
+		-webkit-box-orient: vertical;
+		overflow: hidden;
 	}
 
-	.hero-genres {
+	.genres {
 		display: flex;
-		flex-wrap: wrap;
 		gap: 8px;
 		margin-bottom: 20px;
+		flex-wrap: wrap;
 	}
 
-	.genre-badge {
-		display: inline-block;
-		padding: 6px 12px;
-		background: rgba(255, 255, 255, 0.15);
-		color: #fff;
-		border: 1px solid rgba(255, 255, 255, 0.3);
-		border-radius: 4px;
+	.genres span {
 		font-size: 12px;
-		font-weight: 500;
+		color: #d4d4d8;
+		padding: 4px 10px;
+		border: 1px solid #3f3f46;
+		border-radius: 2px;
 	}
 
-	.hero-buttons {
+	.actions {
 		display: flex;
 		gap: 12px;
 	}
 
-	.btn {
-		padding: 12px 28px;
-		border: none;
-		border-radius: 4px;
-		font-size: 14px;
+	.btn-watch {
+		display: inline-flex;
+		align-items: center;
+		gap: 8px;
+		padding: 12px 24px;
+		background: #facc15;
+		color: #0f0f0f;
 		font-weight: 600;
-		cursor: pointer;
-		transition: all 0.3s ease;
+		font-size: 14px;
 		text-decoration: none;
-		display: inline-block;
-		text-align: center;
+		border-radius: 4px;
+		transition: background 0.2s;
 	}
 
-	.btn-primary {
-		background: #ffc107;
-		color: #000;
+	.btn-watch:hover {
+		background: #eab308;
 	}
 
-	.btn-primary:hover {
-		background: #ffb300;
-		transform: translateY(-2px);
-		box-shadow: 0 4px 12px rgba(255, 193, 7, 0.4);
-	}
-
-	.btn-secondary {
-		background: rgba(255, 255, 255, 0.2);
+	/* Navigation Arrows */
+	.nav-arrow {
+		position: absolute;
+		top: 50%;
+		transform: translateY(-50%);
+		width: 44px;
+		height: 44px;
+		background: rgba(0,0,0,0.5);
+		border: 1px solid rgba(255,255,255,0.1);
+		border-radius: 4px;
 		color: #fff;
-		border: 1px solid rgba(255, 255, 255, 0.4);
+		cursor: pointer;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		z-index: 10;
+		transition: background 0.2s;
 	}
 
-	.btn-secondary:hover {
-		background: rgba(255, 255, 255, 0.3);
-		border-color: rgba(255, 255, 255, 0.6);
+	.nav-arrow:hover {
+		background: rgba(0,0,0,0.7);
 	}
 
-	.hero-indicators {
+	.nav-arrow svg {
+		width: 20px;
+		height: 20px;
+	}
+
+	.nav-arrow.prev {
+		left: 16px;
+	}
+
+	.nav-arrow.next {
+		right: 16px;
+	}
+
+	/* Dots */
+	.dots {
 		position: absolute;
 		bottom: 20px;
 		left: 50%;
 		transform: translateX(-50%);
-		z-index: 20;
 		display: flex;
 		gap: 8px;
+		z-index: 10;
 	}
 
-	.indicator {
-		width: 12px;
-		height: 12px;
+	.dot {
+		width: 8px;
+		height: 8px;
 		border-radius: 50%;
-		background: rgba(255, 255, 255, 0.4);
+		background: rgba(255,255,255,0.3);
 		border: none;
 		cursor: pointer;
-		transition: all 0.3s ease;
+		padding: 0;
+		transition: all 0.2s;
 	}
 
-	.indicator.active {
-		background: #ffc107;
-		width: 32px;
-		border-radius: 6px;
+	.dot.active {
+		background: #facc15;
+		width: 24px;
+		border-radius: 4px;
 	}
 
 	@media (max-width: 768px) {
-		.hero-slider {
-			height: 300px;
+		.hero {
+			height: 320px;
+			border-radius: 0;
 		}
 
-		.hero-content {
-			padding: 30px 20px;
+		.hero-inner {
+			padding: 0 24px;
 		}
 
-		.hero-title {
-			font-size: 24px;
+		.hero-info h2 {
+			font-size: 22px;
 		}
 
-		.hero-description {
-			font-size: 14px;
+		.desc {
+			font-size: 13px;
+			-webkit-line-clamp: 2;
 		}
 
-		.hero-buttons {
-			flex-direction: column;
+		.nav-arrow {
+			width: 36px;
+			height: 36px;
 		}
 
-		.btn {
-			width: 100%;
+		.nav-arrow.prev {
+			left: 8px;
+		}
+
+		.nav-arrow.next {
+			right: 8px;
 		}
 	}
 </style>
