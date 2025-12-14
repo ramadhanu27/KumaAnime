@@ -42,6 +42,15 @@
 
 		isLoading = false;
 
+		// Initialize Google AdSense ads
+		try {
+			const w = window as any;
+			(w.adsbygoogle = w.adsbygoogle || []).push({});
+			(w.adsbygoogle = w.adsbygoogle || []).push({});
+		} catch (e) {
+			console.log('AdSense not loaded:', e);
+		}
+
 		// Start countdown
 		const timer = setInterval(() => {
 			countdown--;
@@ -130,17 +139,14 @@
 				</div>
 			</div>
 
-			<!-- Ad Space 1 -->
+			<!-- Ad Space 1 - Google AdSense -->
 			<div class="ad-container">
-				<div class="ad-placeholder">
-					<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-						<rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
-						<line x1="3" y1="9" x2="21" y2="9"/>
-						<line x1="9" y1="21" x2="9" y2="9"/>
-					</svg>
-					<span>Advertisement Space</span>
-					<p>Pasang iklan Anda di sini</p>
-				</div>
+				<ins class="adsbygoogle"
+					style="display:block"
+					data-ad-client="ca-pub-3983359568431138"
+					data-ad-slot="auto"
+					data-ad-format="auto"
+					data-full-width-responsive="true"></ins>
 			</div>
 
 			<!-- Countdown Section -->
@@ -232,17 +238,14 @@
 				{/if}
 			</div>
 
-			<!-- Ad Space 2 -->
+			<!-- Ad Space 2 - Google AdSense -->
 			<div class="ad-container">
-				<div class="ad-placeholder large">
-					<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-						<rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
-						<line x1="3" y1="9" x2="21" y2="9"/>
-						<line x1="9" y1="21" x2="9" y2="9"/>
-					</svg>
-					<span>Advertisement Space</span>
-					<p>Pasang iklan Anda di sini (728x90 atau responsive)</p>
-				</div>
+				<ins class="adsbygoogle"
+					style="display:block"
+					data-ad-client="ca-pub-3983359568431138"
+					data-ad-slot="auto"
+					data-ad-format="auto"
+					data-full-width-responsive="true"></ins>
 			</div>
 
 			<!-- Instructions -->
@@ -448,35 +451,17 @@
 	/* Ad Container */
 	.ad-container {
 		width: 100%;
-	}
-
-	.ad-placeholder {
+		min-height: 100px;
 		display: flex;
-		flex-direction: column;
-		align-items: center;
 		justify-content: center;
-		gap: 8px;
-		padding: 30px;
-		background: rgba(26, 26, 46, 0.5);
-		border: 2px dashed rgba(255, 255, 255, 0.1);
-		border-radius: 16px;
-		color: rgba(248, 250, 252, 0.4);
-		text-align: center;
+		align-items: center;
+		background: rgba(26, 26, 46, 0.3);
+		border-radius: 12px;
+		overflow: hidden;
 	}
 
-	.ad-placeholder.large {
-		padding: 40px;
-	}
-
-	.ad-placeholder span {
-		font-size: 14px;
-		font-weight: 600;
-	}
-
-	.ad-placeholder p {
-		font-size: 12px;
-		margin: 0;
-		color: rgba(248, 250, 252, 0.3);
+	.ad-container ins {
+		width: 100%;
 	}
 
 	/* Countdown Section */
