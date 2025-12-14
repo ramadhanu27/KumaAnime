@@ -40,6 +40,7 @@
 			<li><a href="/">Home</a></li>
 			<li><a href="/anime-list">Anime List</a></li>
 			<li><a href="/ongoing">Ongoing</a></li>
+			<li><a href="/complete">Complete</a></li>
 			<li><a href="/history">History</a></li>
 			<li><a href="/schedule">Schedule</a></li>
 		</ul>
@@ -82,13 +83,12 @@
 		<span>History</span>
 	</a>
 	
-	<a href="/login" class="nav-item">
+	<a href="/complete" class="nav-item">
 		<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-			<path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"></path>
-			<polyline points="10 17 15 12 10 7"></polyline>
-			<line x1="15" y1="12" x2="3" y2="12"></line>
+			<path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+			<polyline points="22 4 12 14.01 9 11.01"></polyline>
 		</svg>
-		<span>Login</span>
+		<span>Complete</span>
 	</a>
 </nav>
 

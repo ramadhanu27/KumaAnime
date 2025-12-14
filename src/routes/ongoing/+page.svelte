@@ -7,6 +7,9 @@
 
 	$: animeList = data.animeList;
 	$: currentPage = data.currentPage;
+	$: totalPages = data.totalPages;
+	$: hasNextPage = data.hasNextPage;
+	$: hasPrevPage = data.hasPrevPage;
 	$: error = data.error;
 
 	function goToPage(pageNum: number) {
@@ -38,10 +41,10 @@
 	{:else if animeList && animeList.length > 0}
 		<div class="anime-grid">
 			{#each animeList as anime}
-				<a href={`/watch?slug=${encodeURIComponent(anime.slug)}`} class="anime-card">
+				<a href={`/detail?slug=${encodeURIComponent(anime.animeId)}`} class="anime-card">
 					<div class="card-image">
 						<img 
-							src={anime.thumb} 
+							src={anime.poster} 
 							alt={anime.title}
 							loading="lazy"
 							on:error={(e) => {
@@ -55,14 +58,17 @@
 								</svg>
 							</div>
 						</div>
-						{#if anime.episode}
-							<span class="episode-badge">{anime.episode}</span>
+						{#if anime.episodes}
+							<span class="episode-badge">Ep {anime.episodes}</span>
+						{/if}
+						{#if anime.releaseDay}
+							<span class="day-badge">{anime.releaseDay}</span>
 						{/if}
 					</div>
 					<div class="card-content">
 						<h3>{anime.title}</h3>
-						{#if anime.type}
-							<span class="type-badge">{anime.type}</span>
+						{#if anime.latestReleaseDate}
+							<span class="release-date">{anime.latestReleaseDate}</span>
 						{/if}
 					</div>
 				</a>
@@ -71,7 +77,7 @@
 
 		<!-- Pagination -->
 		<div class="pagination">
-			{#if currentPage > 1}
+			{#if hasPrevPage}
 				<button class="pagination-btn prev" on:click={() => goToPage(currentPage - 1)}>
 					<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
 						<path d="M19 12H5M12 19l-7-7 7-7"/>
@@ -80,14 +86,16 @@
 				</button>
 			{/if}
 			
-			<span class="page-info">Halaman {currentPage}</span>
+			<span class="page-info">Halaman {currentPage} dari {totalPages}</span>
 			
-			<button class="pagination-btn next" on:click={() => goToPage(currentPage + 1)}>
-				Selanjutnya
-				<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-					<path d="M5 12h14M12 5l7 7-7 7"/>
-				</svg>
-			</button>
+			{#if hasNextPage}
+				<button class="pagination-btn next" on:click={() => goToPage(currentPage + 1)}>
+					Selanjutnya
+					<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+						<path d="M5 12h14M12 5l7 7-7 7"/>
+					</svg>
+				</button>
+			{/if}
 		</div>
 	{:else}
 		<div class="empty-container">
@@ -240,6 +248,19 @@
 		font-weight: 700;
 	}
 
+	.day-badge {
+		position: absolute;
+		top: 12px;
+		right: 12px;
+		padding: 6px 12px;
+		background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+		border-radius: 20px;
+		color: white;
+		font-size: 11px;
+		font-weight: 700;
+		text-transform: uppercase;
+	}
+
 	.card-content {
 		padding: 16px;
 	}
@@ -257,14 +278,11 @@
 		line-height: 1.4;
 	}
 
-	.type-badge {
+	.release-date {
 		display: inline-block;
-		padding: 4px 10px;
-		background: rgba(99, 102, 241, 0.15);
-		border-radius: 6px;
-		color: #818cf8;
-		font-size: 11px;
-		font-weight: 600;
+		color: rgba(248, 250, 252, 0.6);
+		font-size: 12px;
+		font-weight: 500;
 	}
 
 	.pagination {

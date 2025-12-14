@@ -1,54 +1,80 @@
 import type { PageServerLoad } from "./$types";
 
-interface StreamingLink {
-  source: string;
-  url: string;
-  quality: string;
+interface ServerItem {
+  title: string;
+  serverId: string;
+  href: string;
 }
 
-interface DownloadLink {
-  quality: string;
-  host: string;
+interface QualityServer {
+  title: string;
+  serverList: ServerItem[];
+}
+
+interface DownloadUrl {
+  title: string;
   url: string;
+}
+
+interface DownloadQuality {
+  title: string;
+  size: string;
+  urls: DownloadUrl[];
+}
+
+interface Genre {
+  title: string;
+  genreId: string;
+  href: string;
 }
 
 interface Episode {
-  episode: string;
   title: string;
-  slug: string;
+  eps: number;
   date: string;
-  isCurrent: boolean;
+  episodeId: string;
+  href: string;
 }
 
-interface CastMember {
-  name: string;
-  url: string;
-}
-
-interface EpisodeDetail {
+interface NextPrevEpisode {
   title: string;
-  seriesName: string;
-  alternativeTitle: string;
-  thumb: string;
-  rating: string;
-  synopsis: string;
-  episode: string;
-  type: string;
-  status: string;
-  released: string;
+  episodeId: string;
+  href: string;
+}
+
+interface EpisodeInfo {
+  credit: string;
+  encoder: string;
   duration: string;
-  season: string;
-  studio: string;
-  genres: string[];
-  cast: CastMember[];
-  streamingLinks: StreamingLink[];
-  downloadLinks: DownloadLink[];
+  type: string;
+  genreList: Genre[];
   episodeList: Episode[];
 }
 
+interface EpisodeData {
+  title: string;
+  animeId: string;
+  releaseTime: string;
+  defaultStreamingUrl: string;
+  hasPrevEpisode: boolean;
+  prevEpisode: NextPrevEpisode | null;
+  hasNextEpisode: boolean;
+  nextEpisode: NextPrevEpisode | null;
+  server: {
+    qualities: QualityServer[];
+  };
+  downloadUrl: {
+    qualities: DownloadQuality[];
+  };
+  info: EpisodeInfo;
+}
+
 interface ApiResponse {
-  success: boolean;
-  data: EpisodeDetail;
+  status: string;
+  creator: string;
+  statusCode: number;
+  ok: boolean;
+  data: EpisodeData;
 }
 
 export const load: PageServerLoad = async ({ url, fetch }) => {
@@ -57,29 +83,25 @@ export const load: PageServerLoad = async ({ url, fetch }) => {
   if (!slug) {
     return {
       error: "Slug tidak ditemukan",
-      episodeDetail: null,
+      episodeData: null,
     };
   }
 
   try {
-    // Slug format dari API: "/one-piece-episode-1151-subtitle-indonesia/"
-    // Hapus slash di awal dan akhir untuk digunakan di URL
-    const cleanSlug = slug.replace(/^\/+|\/+$/g, '');
-    
-    const response = await fetch(`https://rdapi.vercel.app/api/anime/detail/${cleanSlug}`);
+    const response = await fetch(`https://www.sankavollerei.com/anime/episode/${slug}`);
     if (!response.ok) {
       throw new Error(`API error: ${response.status}`);
     }
     const data: ApiResponse = await response.json();
 
     return {
-      episodeDetail: data.data || null,
+      episodeData: data.data || null,
       error: null,
     };
   } catch (error) {
     console.error("Error memuat detail episode:", error);
     return {
-      episodeDetail: null,
+      episodeData: null,
       error: "Gagal memuat detail episode. Silakan coba lagi.",
     };
   }

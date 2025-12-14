@@ -34,24 +34,24 @@
 			<!-- Hero Section -->
 			<div class="hero-section">
 				<div class="hero-backdrop">
-					<img src={animeDetail.thumb} alt="" />
+					<img src={animeDetail.poster} alt="" />
 					<div class="hero-overlay"></div>
 				</div>
 				
 				<div class="hero-content">
 					<div class="anime-poster">
 						<img 
-							src={animeDetail.thumb} 
+							src={animeDetail.poster} 
 							alt={animeDetail.title}
 							on:error={(e) => {
 								(e.currentTarget as HTMLImageElement).src = 'https://via.placeholder.com/300x400/1a1a2e/6366f1?text=No+Image';
 							}}
 						/>
 						<div class="poster-overlay">
-							{#if animeDetail.rating}
+							{#if animeDetail.score}
 								<div class="rating-badge">
 									<svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
-									<span>{animeDetail.rating}</span>
+									<span>{animeDetail.score}</span>
 								</div>
 							{/if}
 						</div>
@@ -71,16 +71,16 @@
 
 						<h1 class="anime-title">{animeDetail.title}</h1>
 						
-						{#if animeDetail.alternativeTitle}
-							<p class="alternative-title">{animeDetail.alternativeTitle}</p>
+						{#if animeDetail.japanese}
+							<p class="alternative-title">{animeDetail.japanese}</p>
 						{/if}
 
 						<!-- Quick Info -->
 						<div class="quick-info">
-							{#if animeDetail.totalEpisodes}
+							{#if animeDetail.episodes}
 								<div class="info-chip">
 									<svg class="chip-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="15" rx="2"/><polyline points="17 2 12 7 7 2"/></svg>
-									<span>{animeDetail.totalEpisodes} Episodes</span>
+									<span>{animeDetail.episodes} Episodes</span>
 								</div>
 							{/if}
 							{#if animeDetail.duration}
@@ -89,42 +89,48 @@
 									<span>{animeDetail.duration}</span>
 								</div>
 							{/if}
-							{#if animeDetail.season}
+							{#if animeDetail.aired}
 								<div class="info-chip">
 									<svg class="chip-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
-									<span>{animeDetail.season}</span>
+									<span>{animeDetail.aired}</span>
 								</div>
 							{/if}
-							{#if animeDetail.studio}
+							{#if animeDetail.studios}
 								<div class="info-chip">
 									<svg class="chip-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21V5a2 2 0 0 0-2-2H7a2 2 0 0 0-2 2v16"/><path d="M1 21h22"/></svg>
-									<span>{animeDetail.studio}</span>
+									<span>{animeDetail.studios}</span>
 								</div>
 							{/if}
 						</div>
 
 						<!-- Genres -->
-						{#if animeDetail.genres && animeDetail.genres.length > 0}
+						{#if animeDetail.genreList && animeDetail.genreList.length > 0}
 							<div class="genres-wrap">
-								{#each animeDetail.genres as genre}
-									<span class="genre-tag">{genre}</span>
+								{#each animeDetail.genreList as genre}
+									<a href={`/genre?id=${genre.genreId}`} class="genre-tag">{genre.title}</a>
 								{/each}
 							</div>
 						{/if}
 
 						<!-- Action Buttons -->
-						{#if animeDetail.episodeList && animeDetail.episodeList.length > 0}
-							<div class="action-buttons">
-								<a href={`/watch?slug=${encodeURIComponent(animeDetail.episodeList[0].slug)}`} class="btn-primary">
+						<div class="action-buttons">
+							{#if animeDetail.episodeList && animeDetail.episodeList.length > 0}
+								<a href={`/watch?slug=${encodeURIComponent(animeDetail.episodeList[animeDetail.episodeList.length - 1].episodeId)}`} class="btn-primary">
 									<svg class="btn-icon" width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg>
-									<span>Tonton Sekarang</span>
+									<span>Tonton Episode 1</span>
 								</a>
-								<button class="btn-secondary">
-									<svg class="btn-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg>
-									<span>Tambah ke List</span>
-								</button>
-							</div>
-						{/if}
+							{/if}
+							{#if animeDetail.batch}
+								<a href={`/batch?slug=${encodeURIComponent(animeDetail.batch.batchId)}`} class="btn-secondary btn-batch">
+									<svg class="btn-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+									<span>Download Batch</span>
+								</a>
+							{/if}
+							<button class="btn-secondary">
+								<svg class="btn-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg>
+								<span>Tambah ke List</span>
+							</button>
+						</div>
 					</div>
 				</div>
 			</div>
@@ -134,28 +140,45 @@
 				<!-- Main Content -->
 				<div class="main-content">
 					<!-- Synopsis -->
-					{#if animeDetail.synopsis}
-						<div class="content-card">
-							<h2 class="card-title">
-								<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
-								Sinopsis
-							</h2>
-							<p class="synopsis-text">{animeDetail.synopsis}</p>
-						</div>
-					{/if}
+					<div class="content-card">
+						<h2 class="card-title">
+							<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+							Sinopsis
+						</h2>
+						{#if animeDetail.synopsis && animeDetail.synopsis.paragraphs && animeDetail.synopsis.paragraphs.length > 0}
+							{#each animeDetail.synopsis.paragraphs as paragraph}
+								<p class="synopsis-text">{paragraph}</p>
+							{/each}
+						{:else}
+							<p class="synopsis-text">Sinopsis belum tersedia.</p>
+						{/if}
+						
+						{#if animeDetail.synopsis && animeDetail.synopsis.connections && animeDetail.synopsis.connections.length > 0}
+							<div class="connections-section">
+								<h3 class="connections-title">Related Anime</h3>
+								<div class="connections-list">
+									{#each animeDetail.synopsis.connections as connection}
+										<a href={`/detail?slug=${connection.animeId}`} class="connection-link">
+											{connection.title}
+										</a>
+									{/each}
+								</div>
+							</div>
+						{/if}
+					</div>
 
 					<!-- Episode List -->
 					{#if animeDetail.episodeList && animeDetail.episodeList.length > 0}
 						<div class="content-card">
 							<h2 class="card-title">
 								<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
-								Daftar Episode
+								Daftar Episode ({animeDetail.episodeList.length})
 							</h2>
 							<div class="episodes-grid">
 								{#each animeDetail.episodeList as episode}
-									<a href={`/watch?slug=${encodeURIComponent(episode.slug)}`} class="episode-card">
+									<a href={`/watch?slug=${encodeURIComponent(episode.episodeId)}`} class="episode-card">
 										<div class="episode-num">
-											<span class="num">{episode.episode}</span>
+											<span class="num">{episode.eps}</span>
 										</div>
 										<div class="episode-details">
 											<span class="episode-name">{episode.title}</span>
@@ -164,6 +187,24 @@
 										<div class="episode-action">
 											<svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg>
 										</div>
+									</a>
+								{/each}
+							</div>
+						</div>
+					{/if}
+
+					<!-- Recommended Anime -->
+					{#if animeDetail.recommendedAnimeList && animeDetail.recommendedAnimeList.length > 0}
+						<div class="content-card">
+							<h2 class="card-title">
+								<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 9V5a3 3 0 0 0-3-3l-4 9v11h11.28a2 2 0 0 0 2-1.7l1.38-9a2 2 0 0 0-2-2.3zM7 22H4a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2h3"/></svg>
+								Rekomendasi Anime
+							</h2>
+							<div class="recommended-grid">
+								{#each animeDetail.recommendedAnimeList as rec}
+									<a href={`/detail?slug=${rec.animeId}`} class="recommended-card">
+										<img src={rec.poster} alt={rec.title} loading="lazy" />
+										<span class="recommended-title">{rec.title}</span>
 									</a>
 								{/each}
 							</div>
@@ -186,53 +227,49 @@
 							</div>
 							<div class="detail-item">
 								<span class="detail-label">Episodes</span>
-								<span class="detail-value">{animeDetail.totalEpisodes || '-'}</span>
+								<span class="detail-value">{animeDetail.episodes || '-'}</span>
 							</div>
 							<div class="detail-item">
 								<span class="detail-label">Status</span>
 								<span class="detail-value">{animeDetail.status || '-'}</span>
 							</div>
 							<div class="detail-item">
-								<span class="detail-label">Released</span>
-								<span class="detail-value">{animeDetail.released || '-'}</span>
-							</div>
-							<div class="detail-item">
-								<span class="detail-label">Season</span>
-								<span class="detail-value">{animeDetail.season || '-'}</span>
+								<span class="detail-label">Aired</span>
+								<span class="detail-value">{animeDetail.aired || '-'}</span>
 							</div>
 							<div class="detail-item">
 								<span class="detail-label">Duration</span>
 								<span class="detail-value">{animeDetail.duration || '-'}</span>
 							</div>
 							<div class="detail-item">
-								<span class="detail-label">Studio</span>
-								<span class="detail-value">{animeDetail.studio || '-'}</span>
+								<span class="detail-label">Studios</span>
+								<span class="detail-value">{animeDetail.studios || '-'}</span>
 							</div>
 							<div class="detail-item">
 								<span class="detail-label">Producers</span>
 								<span class="detail-value">{animeDetail.producers || '-'}</span>
 							</div>
 							<div class="detail-item">
-								<span class="detail-label">Rating</span>
+								<span class="detail-label">Score</span>
 								<span class="detail-value rating">
 									<svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
-									{animeDetail.rating || '-'}
+									{animeDetail.score || '-'}
 								</span>
 							</div>
 						</div>
 					</div>
 
-					<!-- Cast Card -->
-					{#if animeDetail.cast && animeDetail.cast.length > 0}
+					<!-- Genres Card (for sidebar) -->
+					{#if animeDetail.genreList && animeDetail.genreList.length > 0}
 						<div class="content-card">
 							<h2 class="card-title">
-								<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
-								Cast
+								<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/><line x1="7" y1="7" x2="7.01" y2="7"/></svg>
+								Genres
 							</h2>
 							<div class="cast-grid">
-								{#each animeDetail.cast as castMember}
-									<a href={castMember.url} target="_blank" rel="noopener noreferrer" class="cast-chip">
-										{castMember.name}
+								{#each animeDetail.genreList as genre}
+									<a href={`/genre?id=${genre.genreId}`} class="cast-chip">
+										{genre.title}
 									</a>
 								{/each}
 							</div>
@@ -707,6 +744,126 @@
 	.episode-card:hover .episode-action {
 		background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
 		color: white;
+	}
+
+	/* Connections Section */
+	.connections-section {
+		margin-top: 24px;
+		padding-top: 20px;
+		border-top: 1px solid rgba(255, 255, 255, 0.1);
+	}
+
+	.connections-title {
+		font-size: 14px;
+		font-weight: 600;
+		color: rgba(248, 250, 252, 0.7);
+		margin: 0 0 12px;
+		text-transform: uppercase;
+		letter-spacing: 0.5px;
+	}
+
+	.connections-list {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 8px;
+	}
+
+	.connection-link {
+		padding: 8px 16px;
+		background: rgba(99, 102, 241, 0.15);
+		border: 1px solid rgba(99, 102, 241, 0.3);
+		border-radius: 20px;
+		color: #818cf8;
+		font-size: 13px;
+		font-weight: 500;
+		text-decoration: none;
+		transition: all 0.3s ease;
+	}
+
+	.connection-link:hover {
+		background: rgba(99, 102, 241, 0.25);
+		border-color: rgba(99, 102, 241, 0.5);
+		transform: translateY(-2px);
+	}
+
+	/* Recommended Anime Grid */
+	.recommended-grid {
+		display: grid;
+		grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+		gap: 16px;
+	}
+
+	.recommended-card {
+		display: flex;
+		flex-direction: column;
+		gap: 10px;
+		text-decoration: none;
+		transition: all 0.3s ease;
+	}
+
+	.recommended-card:hover {
+		transform: translateY(-4px);
+	}
+
+	.recommended-card img {
+		width: 100%;
+		aspect-ratio: 3/4;
+		object-fit: cover;
+		border-radius: 12px;
+		box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+		transition: box-shadow 0.3s ease;
+	}
+
+	.recommended-card:hover img {
+		box-shadow: 0 8px 25px rgba(99, 102, 241, 0.3);
+	}
+
+	.recommended-title {
+		font-size: 12px;
+		font-weight: 500;
+		color: #f8fafc;
+		text-align: center;
+		display: -webkit-box;
+		-webkit-line-clamp: 2;
+		line-clamp: 2;
+		-webkit-box-orient: vertical;
+		overflow: hidden;
+		transition: color 0.3s ease;
+	}
+
+	.recommended-card:hover .recommended-title {
+		color: #818cf8;
+	}
+
+	/* Batch Download Button */
+	.btn-batch {
+		background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+		border-color: transparent;
+		color: white;
+	}
+
+	.btn-batch:hover {
+		background: linear-gradient(135deg, #34d399 0%, #10b981 100%);
+		box-shadow: 0 4px 20px rgba(16, 185, 129, 0.4);
+	}
+
+	/* Genre Tag Link */
+	.genre-tag {
+		padding: 8px 16px;
+		background: rgba(99, 102, 241, 0.15);
+		border: 1px solid rgba(99, 102, 241, 0.3);
+		border-radius: 20px;
+		color: #818cf8;
+		font-size: 13px;
+		font-weight: 500;
+		text-decoration: none;
+		transition: all 0.3s ease;
+	}
+
+	.genre-tag:hover {
+		background: rgba(99, 102, 241, 0.25);
+		border-color: rgba(99, 102, 241, 0.5);
+		transform: translateY(-2px);
 	}
 
 	/* Loading */

@@ -3,10 +3,10 @@
 	import Navigation from '$lib/Navigation.svelte';
 	import Footer from '$lib/Footer.svelte';
 
-	interface AnimeSchedule {
-		day: string;
-		animes: string[];
-	}
+	export let data;
+
+	$: scheduleData = data.scheduleData || [];
+	$: error = data.error;
 
 	const dayIcons: { [key: string]: string } = {
 		'Senin': 'M',
@@ -15,128 +15,25 @@
 		'Kamis': 'K',
 		'Jumat': 'J',
 		'Sabtu': 'Sa',
-		'Minggu': 'Mi'
+		'Minggu': 'Mi',
+		'Random': '?'
 	};
 
-	const scheduleData: AnimeSchedule[] = [
-		{
-			day: 'Senin',
-			animes: [
-				'City The Animation',
-				'Kijin Gentoushou',
-				'Kikaijikake no Marie',
-				'Mofa Gongzhu de Xiao Fannao',
-				'Watashi no Shiawase na Kekkon Season 2'
-			]
-		},
-		{
-			day: 'Selasa',
-			animes: [
-				'Ansatsusha de Aru',
-				'Ore no Status ga Yuusha yori mo Akiraka ni Tsuyoi no da ga',
-				'Chitose-kun wa Ramune Bin no Naka',
-				'Egao no Taenai Shokuba desu.',
-				'Fate/strange Fake',
-				'Gintama 3-nen Z-gumi Ginpachi-sensei',
-				'Grand Blue Season 2',
-				'Isekai Quartet Season 3',
-				'Ruri no Houseki',
-				'Sozai Saishuka no Isekai Ryokouki',
-				'Summer Pockets',
-				'Toujima Tanzaburou wa Kamen Rider ni Naritai',
-				'Rabu Kakkou no Iinazuke Season 2',
-				'Kimi to Koete Koi ni Naru',
-				'Ninja to Gokudou',
-				'Tondemo Skill de Isekai Hourou Meshi Season 2',
-				'Yano-kun no Futsuu no Hibi'
-			]
-		},
-		{
-			day: 'Rabu',
-			animes: [
-				'Ameku Takao no Suiri Karte',
-				'Bukiyou na Senpai.',
-				'Dr. Stone Season 4 Part 2',
-				'Jigoku Sensei Nube (2025)',
-				'Kakuriyo no Yadomeshi',
-				'Ni Kinoko Inu',
-				'Let\'s Play: Quest-darake no My Life',
-				'Mushoku no Eiyuu',
-				'Tensei Akujo no Kuro Rekishi',
-				'Tensei shitara Dainana Ouji Datta node Season 2',
-				'Touhai: Ura Rate Mahjong Touhai Roku',
-				'Wandance'
-			]
-		},
-		{
-			day: 'Jumat',
-			animes: [
-				'Akujiki Reijou to Kyouketsu Koushaku',
-				'Around 40 Otoko no Isekai',
-				'Tsuuhan',
-				'BanG Dream! Ave Mujica',
-				'Mecha-ude (TV)',
-				'Mizu Zokusei no Mahoutsukai',
-				'Mugen Gacha',
-				'Senpai wa Otokonoko',
-				'Tougen Anki',
-				'Towa no Yuugure',
-				'Watashi wo Tabetai, Hitodenashi'
-			]
-		},
-		{
-			day: 'Sabtu',
-			animes: [
-				'Astro Note',
-				'Boku no Hero Academia Season 8',
-				'Guilty Gear Strive: Dual Rulers',
-				'Kaijuu 8-gou Season 2',
-				'Kao ni Denai Kashiwada-san to Kao ni Deru Oota-kun',
-				'Kekkon Yubiwa Monogatari Season 2',
-				'Mikata ga Yowasugite Hojo Mahou ni Tesshiteita',
-				'Kyuutei Mahoushi',
-				'Momentary Lily',
-				'Saigo ni Hitotsu dake Onegai shitemo Yoroshii deshou ka'
-			]
-		},
-		{
-			day: 'Minggu',
-			animes: [
-				'Alma-chan wa Kazoku ni Naritai',
-				'Anne Shirley',
-				'Ao no Orchestra Season 2',
-				'Chanto Suenai Kyuuketsuki-chan',
-				'Chichi wa Eiyuu, Haha wa Seirei, Musume no Watashi wa Tenseisha.',
-				'Digimon Beatbreak',
-				'Fumetsu no Anata e Season 3',
-				'Gachiakuta',
-				'Game Center Shoujo to Ibunka Kouryuu',
-				'Gnosia',
-				'Hikaru ga Shinda Natsu',
-				'Isekai Mokushiroku Mynoghra',
-				'Kaoru Hana wa Rin to Saku',
-				'Kingdom Season 6',
-				'Nageki no Bourei wa Intai shitai Season 2',
-				'Nanatsu no Taizai: Mokushiroku no Yonkishi S2',
-				'Okinawa de Suki ni Natta Ko ga Hougen Sugite Tsurasugiru',
-				'One Piece',
-				'One Punch Man Season 3',
-				'Seishun Buta Yarou wa Santa Claus no Yume wo Minai',
-				'Shuumatsu Touring',
-				'SI-VIS: The Sound of Heroes',
-				'Taiyou yori mo Mabushii Hoshi',
-				'Tomodachi no Imouto ga Ore ni dake Uzai',
-				'Uma Musume: Cinderella Gray Part 2',
-				'Witch Watch',
-				'Yasei no Last Boss ga Arawareta!'
-			]
-		}
-	];
+	const dayColors: { [key: string]: string } = {
+		'Senin': '#6366f1',
+		'Selasa': '#ec4899',
+		'Rabu': '#f59e0b',
+		'Kamis': '#10b981',
+		'Jumat': '#3b82f6',
+		'Sabtu': '#8b5cf6',
+		'Minggu': '#ef4444',
+		'Random': '#64748b'
+	};
 
-	let expandedDay: string | null = null;
+	let selectedDay: string | null = null;
 
-	function toggleDay(day: string) {
-		expandedDay = expandedDay === day ? null : day;
+	function selectDay(day: string) {
+		selectedDay = selectedDay === day ? null : day;
 	}
 
 	function getTodayDay(): string {
@@ -145,6 +42,23 @@
 	}
 
 	const today = getTodayDay();
+
+	// Auto-select today's schedule on mount
+	$: if (scheduleData.length > 0 && selectedDay === null) {
+		const todaySchedule = scheduleData.find((s: { day: string }) => s.day === today);
+		if (todaySchedule) {
+			selectedDay = today;
+		} else {
+			selectedDay = scheduleData[0]?.day;
+		}
+	}
+
+	$: currentSchedule = scheduleData.find((s: { day: string }) => s.day === selectedDay);
+
+	function handleImageError(event: Event) {
+		const img = event.target as HTMLImageElement;
+		img.src = 'https://via.placeholder.com/200x280?text=No+Image';
+	}
 </script>
 
 <Header />
@@ -159,58 +73,80 @@
 		</div>
 		<h1>Jadwal Rilis Anime</h1>
 		<p class="subtitle">Jadwal tayang anime mingguan</p>
-		<div class="today-badge">
-			<svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
-				<circle cx="12" cy="12" r="10"/>
+	</div>
+
+	{#if error}
+		<div class="error-container">
+			<svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+				<circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>
 			</svg>
-			Hari ini: {today}
+			<p>{error}</p>
 		</div>
-	</div>
-
-	<div class="schedule-grid">
-		{#each scheduleData as schedule (schedule.day)}
-			<div class="schedule-card" class:today={schedule.day === today} class:expanded={expandedDay === schedule.day}>
-				<button
-					class="day-header"
-					class:expanded={expandedDay === schedule.day}
-					on:click={() => toggleDay(schedule.day)}
-					aria-expanded={expandedDay === schedule.day}
-				>
-					<div class="day-info">
-						<div class="day-icon" class:today={schedule.day === today}>
-							{dayIcons[schedule.day] || schedule.day.charAt(0)}
-						</div>
-						<div class="day-text">
-							<span class="day-name">{schedule.day}</span>
-							{#if schedule.day === today}
-								<span class="today-label">Hari ini</span>
-							{/if}
-						</div>
-					</div>
-					<div class="day-meta">
-						<span class="anime-count">{schedule.animes.length}</span>
-						<svg class="chevron" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-							<polyline points="6 9 12 15 18 9"/>
-						</svg>
-					</div>
-				</button>
-
-				{#if expandedDay === schedule.day}
-					<div class="anime-list">
-						{#each schedule.animes as anime, index (anime)}
-							<div class="anime-item" style="--delay: {index * 0.03}s">
-								<div class="anime-number">{index + 1}</div>
-								<span class="anime-title">{anime}</span>
-								<svg class="anime-icon" width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
-									<polygon points="5 3 19 12 5 21 5 3"/>
-								</svg>
-							</div>
-						{/each}
-					</div>
-				{/if}
+	{:else if scheduleData && scheduleData.length > 0}
+		<!-- Day Tabs -->
+		<div class="day-tabs-container">
+			<div class="day-tabs">
+				{#each scheduleData as schedule (schedule.day)}
+					<button
+						class="day-tab"
+						class:active={selectedDay === schedule.day}
+						class:today={schedule.day === today}
+						style="--day-color: {dayColors[schedule.day] || '#6366f1'}"
+						on:click={() => selectDay(schedule.day)}
+					>
+						<span class="day-icon">{dayIcons[schedule.day] || schedule.day.charAt(0)}</span>
+						<span class="day-name">{schedule.day}</span>
+						<span class="anime-count">{schedule.anime_list?.length || 0}</span>
+						{#if schedule.day === today}
+							<span class="today-indicator"></span>
+						{/if}
+					</button>
+				{/each}
 			</div>
-		{/each}
-	</div>
+		</div>
+
+		<!-- Anime Grid -->
+		{#if currentSchedule}
+			<div class="schedule-content">
+				<div class="content-header">
+					<h2 style="--day-color: {dayColors[currentSchedule.day] || '#6366f1'}">
+						<span class="day-badge">{dayIcons[currentSchedule.day] || currentSchedule.day.charAt(0)}</span>
+						{currentSchedule.day}
+						{#if currentSchedule.day === today}
+							<span class="today-tag">Hari ini</span>
+						{/if}
+					</h2>
+					<p class="anime-total">{currentSchedule.anime_list?.length || 0} Anime</p>
+				</div>
+
+				<div class="anime-grid">
+					{#each currentSchedule.anime_list as anime, index (anime.slug)}
+						<a href={`/detail?slug=${encodeURIComponent(anime.slug)}`} class="anime-card" style="--delay: {index * 0.05}s">
+							<div class="card-poster">
+								<img src={anime.poster} alt={anime.title} loading="lazy" on:error={handleImageError} />
+								<div class="card-overlay">
+									<svg width="40" height="40" viewBox="0 0 24 24" fill="currentColor">
+										<polygon points="5 3 19 12 5 21 5 3"/>
+									</svg>
+								</div>
+							</div>
+							<div class="card-info">
+								<h3 class="card-title">{anime.title}</h3>
+							</div>
+						</a>
+					{/each}
+				</div>
+			</div>
+		{/if}
+	{:else}
+		<div class="empty-container">
+			<svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+				<rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/>
+			</svg>
+			<h3>Tidak ada jadwal</h3>
+			<p>Jadwal anime belum tersedia</p>
+		</div>
+	{/if}
 
 	<div class="schedule-note">
 		<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -226,13 +162,13 @@
 	.schedule-page {
 		min-height: 100vh;
 		padding: 130px 24px 60px;
-		max-width: 1200px;
+		max-width: 1400px;
 		margin: 0 auto;
 	}
 
 	.page-header {
 		text-align: center;
-		margin-bottom: 48px;
+		margin-bottom: 40px;
 	}
 
 	.header-icon {
@@ -257,228 +193,301 @@
 	.subtitle {
 		color: rgba(248, 250, 252, 0.6);
 		font-size: 16px;
-		margin: 0 0 20px;
+		margin: 0;
 	}
 
-	.today-badge {
-		display: inline-flex;
+	/* Day Tabs */
+	.day-tabs-container {
+		margin-bottom: 32px;
+		overflow-x: auto;
+		-webkit-overflow-scrolling: touch;
+		scrollbar-width: none;
+	}
+
+	.day-tabs-container::-webkit-scrollbar {
+		display: none;
+	}
+
+	.day-tabs {
+		display: flex;
+		gap: 10px;
+		padding: 4px;
+		min-width: max-content;
+	}
+
+	.day-tab {
+		position: relative;
+		display: flex;
+		flex-direction: column;
 		align-items: center;
-		gap: 8px;
-		padding: 10px 20px;
-		background: linear-gradient(135deg, #10b981 0%, #059669 100%);
-		border-radius: 25px;
+		gap: 6px;
+		padding: 16px 20px;
+		background: rgba(26, 26, 46, 0.8);
+		backdrop-filter: blur(10px);
+		border: 1px solid rgba(255, 255, 255, 0.05);
+		border-radius: 16px;
+		color: rgba(248, 250, 252, 0.7);
+		cursor: pointer;
+		transition: all 0.3s ease;
+		min-width: 90px;
+	}
+
+	.day-tab:hover {
+		border-color: rgba(255, 255, 255, 0.1);
+		background: rgba(26, 26, 46, 0.95);
+		transform: translateY(-2px);
+	}
+
+	.day-tab.active {
+		background: linear-gradient(135deg, var(--day-color) 0%, color-mix(in srgb, var(--day-color) 80%, black) 100%);
+		border-color: transparent;
 		color: white;
-		font-size: 14px;
+		box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+		transform: translateY(-4px);
+	}
+
+	.day-tab.today:not(.active) {
+		border-color: rgba(16, 185, 129, 0.4);
+	}
+
+	.day-tab .day-icon {
+		font-size: 20px;
+		font-weight: 800;
+	}
+
+	.day-tab .day-name {
+		font-size: 13px;
 		font-weight: 600;
 	}
 
-	.schedule-grid {
-		display: grid;
-		grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
-		gap: 20px;
-		margin-bottom: 40px;
+	.day-tab .anime-count {
+		font-size: 11px;
+		padding: 3px 8px;
+		background: rgba(255, 255, 255, 0.15);
+		border-radius: 10px;
+		font-weight: 700;
 	}
 
-	.schedule-card {
-		background: rgba(26, 26, 46, 0.8);
+	.day-tab.active .anime-count {
+		background: rgba(255, 255, 255, 0.25);
+	}
+
+	.today-indicator {
+		position: absolute;
+		top: 8px;
+		right: 8px;
+		width: 8px;
+		height: 8px;
+		background: #10b981;
+		border-radius: 50%;
+		animation: blink 1.5s infinite;
+	}
+
+	@keyframes blink {
+		0%, 100% { opacity: 1; }
+		50% { opacity: 0.4; }
+	}
+
+	/* Schedule Content */
+	.schedule-content {
+		background: rgba(26, 26, 46, 0.6);
 		backdrop-filter: blur(10px);
-		border-radius: 16px;
-		overflow: hidden;
+		border-radius: 24px;
 		border: 1px solid rgba(255, 255, 255, 0.05);
-		transition: all 0.3s ease;
+		padding: 32px;
+		margin-bottom: 32px;
 	}
 
-	.schedule-card:hover {
-		border-color: rgba(99, 102, 241, 0.3);
-		transform: translateY(-4px);
-		box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
-	}
-
-	.schedule-card.today {
-		border-color: rgba(16, 185, 129, 0.4);
-		box-shadow: 0 0 30px rgba(16, 185, 129, 0.15);
-	}
-
-	.schedule-card.expanded {
-		border-color: rgba(99, 102, 241, 0.4);
-	}
-
-	.day-header {
-		width: 100%;
-		padding: 20px;
-		background: transparent;
-		border: none;
-		color: #f8fafc;
-		cursor: pointer;
+	.content-header {
 		display: flex;
 		align-items: center;
 		justify-content: space-between;
-		transition: all 0.3s ease;
-	}
-
-	.day-header:hover {
-		background: rgba(255, 255, 255, 0.03);
-	}
-
-	.day-info {
-		display: flex;
-		align-items: center;
+		margin-bottom: 28px;
+		flex-wrap: wrap;
 		gap: 16px;
 	}
 
-	.day-icon {
-		width: 48px;
-		height: 48px;
-		background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
-		border-radius: 12px;
+	.content-header h2 {
 		display: flex;
 		align-items: center;
+		gap: 12px;
+		font-size: 28px;
+		font-weight: 800;
+		color: #f8fafc;
+		margin: 0;
+	}
+
+	.day-badge {
+		display: inline-flex;
+		align-items: center;
 		justify-content: center;
-		font-size: 18px;
+		width: 48px;
+		height: 48px;
+		background: linear-gradient(135deg, var(--day-color) 0%, color-mix(in srgb, var(--day-color) 80%, black) 100%);
+		border-radius: 14px;
+		font-size: 20px;
 		font-weight: 800;
 		color: white;
 	}
 
-	.day-icon.today {
+	.today-tag {
+		font-size: 12px;
+		padding: 6px 12px;
 		background: linear-gradient(135deg, #10b981 0%, #059669 100%);
-		animation: pulse 2s infinite;
-	}
-
-	@keyframes pulse {
-		0%, 100% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.4); }
-		50% { box-shadow: 0 0 0 10px rgba(16, 185, 129, 0); }
-	}
-
-	.day-text {
-		display: flex;
-		flex-direction: column;
-		align-items: flex-start;
-		gap: 4px;
-	}
-
-	.day-name {
-		font-size: 18px;
-		font-weight: 700;
-	}
-
-	.today-label {
-		font-size: 11px;
-		padding: 3px 8px;
-		background: rgba(16, 185, 129, 0.2);
-		color: #34d399;
-		border-radius: 10px;
-		font-weight: 600;
-	}
-
-	.day-meta {
-		display: flex;
-		align-items: center;
-		gap: 12px;
-	}
-
-	.anime-count {
-		padding: 6px 14px;
-		background: rgba(99, 102, 241, 0.15);
 		border-radius: 20px;
-		color: #818cf8;
-		font-size: 13px;
-		font-weight: 700;
+		font-weight: 600;
+		color: white;
 	}
 
-	.chevron {
-		color: rgba(248, 250, 252, 0.5);
-		transition: transform 0.3s ease;
-	}
-
-	.day-header.expanded .chevron {
-		transform: rotate(180deg);
-	}
-
-	.anime-list {
-		padding: 0 20px 20px;
-		max-height: 400px;
-		overflow-y: auto;
-	}
-
-	.anime-list::-webkit-scrollbar {
-		width: 6px;
-	}
-
-	.anime-list::-webkit-scrollbar-track {
+	.anime-total {
+		font-size: 16px;
+		color: rgba(248, 250, 252, 0.6);
+		margin: 0;
+		padding: 8px 16px;
 		background: rgba(255, 255, 255, 0.05);
-		border-radius: 10px;
+		border-radius: 20px;
 	}
 
-	.anime-list::-webkit-scrollbar-thumb {
-		background: rgba(99, 102, 241, 0.4);
-		border-radius: 10px;
+	/* Anime Grid */
+	.anime-grid {
+		display: grid;
+		grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+		gap: 20px;
 	}
 
-	.anime-item {
-		display: flex;
-		align-items: center;
-		gap: 14px;
-		padding: 14px 16px;
+	.anime-card {
+		text-decoration: none;
 		background: rgba(255, 255, 255, 0.03);
-		border-radius: 10px;
-		margin-bottom: 8px;
+		border-radius: 16px;
+		overflow: hidden;
+		border: 1px solid rgba(255, 255, 255, 0.05);
 		transition: all 0.3s ease;
-		animation: slideIn 0.3s ease forwards;
+		animation: fadeIn 0.4s ease forwards;
 		animation-delay: var(--delay);
 		opacity: 0;
 	}
 
-	@keyframes slideIn {
+	@keyframes fadeIn {
 		from {
 			opacity: 0;
-			transform: translateX(-10px);
+			transform: translateY(20px);
 		}
 		to {
 			opacity: 1;
-			transform: translateX(0);
+			transform: translateY(0);
 		}
 	}
 
-	.anime-item:hover {
-		background: rgba(99, 102, 241, 0.1);
-		transform: translateX(4px);
+	.anime-card:hover {
+		border-color: rgba(99, 102, 241, 0.4);
+		transform: translateY(-8px);
+		box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
 	}
 
-	.anime-item:last-child {
-		margin-bottom: 0;
+	.card-poster {
+		position: relative;
+		aspect-ratio: 3/4;
+		overflow: hidden;
 	}
 
-	.anime-number {
-		width: 28px;
-		height: 28px;
-		background: rgba(99, 102, 241, 0.2);
-		border-radius: 8px;
+	.card-poster img {
+		width: 100%;
+		height: 100%;
+		object-fit: cover;
+		transition: transform 0.4s ease;
+	}
+
+	.anime-card:hover .card-poster img {
+		transform: scale(1.1);
+	}
+
+	.card-overlay {
+		position: absolute;
+		inset: 0;
+		background: linear-gradient(to top, rgba(0, 0, 0, 0.9) 0%, transparent 50%);
 		display: flex;
 		align-items: center;
 		justify-content: center;
-		color: #818cf8;
-		font-size: 12px;
-		font-weight: 700;
-		flex-shrink: 0;
-	}
-
-	.anime-title {
-		flex: 1;
-		color: rgba(248, 250, 252, 0.9);
-		font-size: 14px;
-		font-weight: 500;
-		line-height: 1.4;
-	}
-
-	.anime-icon {
-		color: rgba(248, 250, 252, 0.3);
-		flex-shrink: 0;
+		opacity: 0;
 		transition: all 0.3s ease;
 	}
 
-	.anime-item:hover .anime-icon {
-		color: #6366f1;
-		transform: scale(1.2);
+	.anime-card:hover .card-overlay {
+		opacity: 1;
+		background: linear-gradient(to top, rgba(0, 0, 0, 0.95) 0%, rgba(99, 102, 241, 0.3) 100%);
+	}
+
+	.card-overlay svg {
+		color: white;
+		filter: drop-shadow(0 4px 12px rgba(0, 0, 0, 0.5));
+		transform: scale(0.8);
+		transition: transform 0.3s ease;
+	}
+
+	.anime-card:hover .card-overlay svg {
+		transform: scale(1);
+	}
+
+	.card-info {
+		padding: 14px;
+	}
+
+	.card-title {
+		font-size: 13px;
+		font-weight: 600;
+		color: #f8fafc;
+		margin: 0;
+		line-height: 1.4;
+		display: -webkit-box;
+		-webkit-line-clamp: 2;
+		-webkit-box-orient: vertical;
+		overflow: hidden;
+	}
+
+	/* Error & Empty States */
+	.error-container {
+		text-align: center;
+		padding: 60px 40px;
+		background: rgba(244, 63, 94, 0.1);
+		border: 1px solid rgba(244, 63, 94, 0.2);
+		border-radius: 20px;
+		color: #f43f5e;
+		margin-bottom: 40px;
+	}
+
+	.error-container svg {
+		margin-bottom: 16px;
+	}
+
+	.error-container p {
+		margin: 0;
+		font-size: 16px;
+	}
+
+	.empty-container {
+		text-align: center;
+		padding: 80px 40px;
+		background: rgba(26, 26, 46, 0.8);
+		backdrop-filter: blur(10px);
+		border-radius: 20px;
+		border: 1px solid rgba(255, 255, 255, 0.05);
+		margin-bottom: 40px;
+	}
+
+	.empty-container svg {
+		color: rgba(248, 250, 252, 0.3);
+		margin-bottom: 24px;
+	}
+
+	.empty-container h3 {
+		color: #f8fafc;
+		font-size: 24px;
+		margin: 0 0 8px;
+	}
+
+	.empty-container p {
+		color: rgba(248, 250, 252, 0.6);
+		margin: 0;
 	}
 
 	.schedule-note {
@@ -492,8 +501,10 @@
 		border-radius: 12px;
 		color: #fbbf24;
 		font-size: 14px;
+		text-align: center;
 	}
 
+	/* Mobile Responsive */
 	@media (max-width: 768px) {
 		.schedule-page {
 			padding: 80px 16px 100px;
@@ -503,26 +514,50 @@
 			font-size: 28px;
 		}
 
-		.schedule-grid {
-			grid-template-columns: 1fr;
+		.day-tab {
+			padding: 12px 16px;
+			min-width: 75px;
 		}
 
-		.day-header {
-			padding: 16px;
+		.day-tab .day-icon {
+			font-size: 18px;
 		}
 
-		.day-icon {
+		.day-tab .day-name {
+			font-size: 12px;
+		}
+
+		.schedule-content {
+			padding: 20px;
+			border-radius: 20px;
+		}
+
+		.content-header h2 {
+			font-size: 22px;
+		}
+
+		.day-badge {
 			width: 40px;
 			height: 40px;
 			font-size: 16px;
 		}
 
-		.day-name {
-			font-size: 16px;
+		.anime-grid {
+			grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+			gap: 14px;
 		}
 
-		.anime-list {
-			max-height: 300px;
+		.card-info {
+			padding: 10px;
+		}
+
+		.card-title {
+			font-size: 12px;
+		}
+
+		.schedule-note {
+			flex-direction: column;
+			gap: 8px;
 		}
 	}
 </style>

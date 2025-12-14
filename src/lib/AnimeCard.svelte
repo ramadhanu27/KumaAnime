@@ -1,19 +1,56 @@
 <script lang="ts">
-	export let anime: {
+	interface OngoingAnimeItem {
 		title: string;
-		thumb: string;
-		slug: string;
-		episode: string;
-		type: string;
-		date?: string;
-	};
+		poster: string;
+		episodes: number | null;
+		releaseDay: string;
+		latestReleaseDate: string;
+		animeId: string;
+		href: string;
+		otakudesuUrl: string;
+	}
+
+	interface CompletedAnimeItem {
+		title: string;
+		poster: string;
+		episodes: number;
+		score: string;
+		lastReleaseDate: string;
+		animeId: string;
+		href: string;
+		otakudesuUrl: string;
+	}
+
+	type AnimeItem = OngoingAnimeItem | CompletedAnimeItem;
+
+	export let anime: AnimeItem;
+	export let type: 'ongoing' | 'completed' = 'ongoing';
+
+	// Type guard to check if it's a completed anime
+	function isCompleted(item: AnimeItem): item is CompletedAnimeItem {
+		return 'score' in item;
+	}
+
+	// Get episode text
+	$: episodeText = anime.episodes ? `Ep ${anime.episodes}` : 'Ongoing';
+	
+	// Get date text based on type
+	$: dateText = type === 'ongoing' 
+		? (anime as OngoingAnimeItem).latestReleaseDate 
+		: (anime as CompletedAnimeItem).lastReleaseDate;
+
+	// Get release day for ongoing
+	$: releaseDay = type === 'ongoing' ? (anime as OngoingAnimeItem).releaseDay : null;
+	
+	// Get score for completed
+	$: score = type === 'completed' ? (anime as CompletedAnimeItem).score : null;
 </script>
 
 <article class="anime-card">
-	<a href={`/detail?slug=${encodeURIComponent(anime.slug)}`} class="card-link">
+	<a href={`/detail?slug=${encodeURIComponent(anime.animeId)}`} class="card-link">
 		<div class="card-image">
 			<img
-				src={anime.thumb}
+				src={anime.poster}
 				alt={anime.title}
 				loading="lazy"
 				on:error={(e) => {
@@ -25,17 +62,21 @@
 				<span class="play-icon">▶</span>
 			</div>
 			<div class="card-badges">
-				<span class="badge-type">{anime.type}</span>
+				{#if type === 'ongoing' && releaseDay}
+					<span class="badge-type">{releaseDay}</span>
+				{:else if type === 'completed' && score}
+					<span class="badge-score">⭐ {score}</span>
+				{/if}
 			</div>
 			<div class="card-info">
-				<span class="episode-badge">{anime.episode}</span>
+				<span class="episode-badge">{episodeText}</span>
+				{#if dateText}
+					<span class="date-badge">{dateText}</span>
+				{/if}
 			</div>
 		</div>
 		<div class="card-content">
 			<h3 class="card-title">{anime.title}</h3>
-			{#if anime.date}
-				<p class="card-date">{anime.date}</p>
-			{/if}
 		</div>
 	</a>
 </article>
@@ -143,6 +184,16 @@
 		box-shadow: 0 2px 10px rgba(99, 102, 241, 0.4);
 	}
 
+	.badge-score {
+		background: linear-gradient(135deg, #f59e0b 0%, #fbbf24 100%);
+		color: #1a1a2e;
+		padding: 4px 10px;
+		border-radius: 20px;
+		font-size: 11px;
+		font-weight: 700;
+		box-shadow: 0 2px 10px rgba(251, 191, 36, 0.4);
+	}
+
 	.card-info {
 		position: absolute;
 		bottom: 0;
@@ -166,10 +217,13 @@
 		box-shadow: 0 2px 8px rgba(236, 72, 153, 0.4);
 	}
 
-	.rating-badge {
-		color: #fbbf24;
-		font-size: 16px;
-		filter: drop-shadow(0 0 6px rgba(251, 191, 36, 0.6));
+	.date-badge {
+		color: rgba(255, 255, 255, 0.8);
+		font-size: 10px;
+		font-weight: 500;
+		background: rgba(0, 0, 0, 0.5);
+		padding: 3px 8px;
+		border-radius: 10px;
 	}
 
 	.card-content {
@@ -195,13 +249,6 @@
 		color: #818cf8;
 	}
 
-	.card-date {
-		font-size: 11px;
-		color: rgba(248, 250, 252, 0.5);
-		margin: 6px 0 0;
-		text-align: center;
-	}
-
 	/* Responsive */
 	@media (max-width: 768px) {
 		.play-icon {
@@ -225,7 +272,8 @@
 			left: 6px;
 		}
 
-		.badge-type {
+		.badge-type,
+		.badge-score {
 			padding: 3px 8px;
 			font-size: 9px;
 		}
@@ -238,5 +286,10 @@
 			padding: 3px 8px;
 			font-size: 10px;
 		}
+
+		.date-badge {
+			font-size: 9px;
+		}
 	}
 </style>
+

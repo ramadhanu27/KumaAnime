@@ -39,7 +39,21 @@
 	<div class="content-layout">
 		<!-- Main Content - Left Side -->
 		<main class="main-content">
-			<AnimeGrid animeList={data.animeData} currentPage={data.currentPage} />
+			<!-- Ongoing Anime Section -->
+			<AnimeGrid 
+				animeList={data.ongoingAnime} 
+				sectionTitle="Ongoing Anime" 
+				viewAllHref={data.ongoingHref}
+				type="ongoing" 
+			/>
+			
+			<!-- Completed Anime Section -->
+			<AnimeGrid 
+				animeList={data.completedAnime} 
+				sectionTitle="Completed Anime" 
+				viewAllHref={data.completedHref}
+				type="completed" 
+			/>
 		</main>
 
 		<!-- Sidebar - Right Side -->

@@ -1,25 +1,23 @@
 import type { PageServerLoad } from "./$types";
 
-interface OngoingAnime {
+interface CompleteAnime {
   title: string;
   poster: string;
-  episodes: number | null;
-  releaseDay: string;
-  latestReleaseDate: string;
+  episodes: number;
+  score: string;
+  lastReleaseDate: string;
   animeId: string;
   href: string;
   otakudesuUrl: string;
 }
 
-interface OngoingResponse {
+interface CompleteResponse {
   status: string;
   creator: string;
   statusCode: number;
   ok: boolean;
   data: {
-    href: string;
-    otakudesuUrl: string;
-    animeList: OngoingAnime[];
+    animeList: CompleteAnime[];
   };
   pagination: {
     currentPage: number;
@@ -35,11 +33,11 @@ export const load: PageServerLoad = async ({ url, fetch }) => {
   const page = url.searchParams.get("page") || "1";
 
   try {
-    const response = await fetch(`https://www.sankavollerei.com/anime/ongoing-anime?page=${page}`);
+    const response = await fetch(`https://www.sankavollerei.com/anime/complete-anime?page=${page}`);
     if (!response.ok) {
       throw new Error(`API error: ${response.status}`);
     }
-    const data: OngoingResponse = await response.json();
+    const data: CompleteResponse = await response.json();
 
     return {
       animeList: data.data?.animeList || [],
@@ -50,14 +48,14 @@ export const load: PageServerLoad = async ({ url, fetch }) => {
       error: null,
     };
   } catch (error) {
-    console.error("Error memuat anime ongoing:", error);
+    console.error("Error memuat anime complete:", error);
     return {
       animeList: [],
       currentPage: 1,
       totalPages: 1,
       hasNextPage: false,
       hasPrevPage: false,
-      error: "Gagal memuat anime ongoing. Silakan coba lagi.",
+      error: "Gagal memuat anime complete. Silakan coba lagi.",
     };
   }
 };
