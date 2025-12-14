@@ -11,38 +11,25 @@
 	$: error = data.error;
 
 	const genres = [
-		'action',
-		'adventure',
-		'comedy',
-		'drama',
-		'fantasy',
-		'horror',
-		'mystery',
-		'romance',
-		'sci-fi',
-		'slice-of-life',
-		'sports',
-		'supernatural',
-		'thriller'
+		'action', 'adventure', 'comedy', 'drama', 'fantasy', 'horror',
+		'mystery', 'romance', 'sci-fi', 'slice-of-life', 'sports',
+		'supernatural', 'thriller', 'mecha', 'music', 'school',
+		'shounen', 'shoujo', 'seinen', 'josei', 'isekai', 'harem', 'ecchi'
 	];
 
-	const statuses = ['ongoing', 'completed', 'upcoming'];
-
-	function buildFilterUrl(newGenre?: string, newStatus?: string, newPage?: number) {
+	function buildFilterUrl(newGenre?: string, newPage?: number) {
 		const params = new URLSearchParams();
 		const genre = newGenre !== undefined ? newGenre : filters.genre;
-		const status = newStatus !== undefined ? newStatus : filters.status;
 		const page = newPage || 1;
 
 		if (genre) params.append('genre', genre);
-		if (status) params.append('status', status);
 		if (page > 1) params.append('page', page.toString());
 
 		return `/anime-list?${params.toString()}`;
 	}
 
 	function goToPage(pageNum: number) {
-		window.location.href = buildFilterUrl(undefined, undefined, pageNum);
+		window.location.href = buildFilterUrl(undefined, pageNum);
 	}
 </script>
 
@@ -52,7 +39,7 @@
 <main class="anime-list-page">
 	<div class="section-header">
 		<h2>Daftar Anime</h2>
-		<span class="subtitle">Jelajahi koleksi anime lengkap dengan filter</span>
+		<span class="subtitle">Genre: {filters.genre.charAt(0).toUpperCase() + filters.genre.slice(1)}</span>
 	</div>
 
 	<!-- Filter Section -->
@@ -60,30 +47,13 @@
 		<div class="filter-group">
 			<label for="genre-select">Genre</label>
 			<select id="genre-select" value={filters.genre} on:change={(e) => {
-				window.location.href = buildFilterUrl(e.currentTarget.value, filters.status, 1);
+				window.location.href = buildFilterUrl(e.currentTarget.value, 1);
 			}}>
-				<option value="">Semua Genre</option>
 				{#each genres as genre}
 					<option value={genre}>{genre.charAt(0).toUpperCase() + genre.slice(1).replace('-', ' ')}</option>
 				{/each}
 			</select>
 		</div>
-
-		<div class="filter-group">
-			<label for="status-select">Status</label>
-			<select id="status-select" value={filters.status} on:change={(e) => {
-				window.location.href = buildFilterUrl(filters.genre, e.currentTarget.value, 1);
-			}}>
-				<option value="">Semua Status</option>
-				{#each statuses as status}
-					<option value={status}>{status.charAt(0).toUpperCase() + status.slice(1)}</option>
-				{/each}
-			</select>
-		</div>
-
-		{#if filters.genre || filters.status}
-			<a href="/anime-list" class="reset-btn">Reset Filter</a>
-		{/if}
 	</div>
 
 	{#if error}
@@ -93,10 +63,10 @@
 	{:else if animeList && animeList.length > 0}
 		<div class="anime-grid">
 			{#each animeList as anime}
-				<a href={`/detail?slug=anime${anime.slug.replace(/\//g, '')}`} class="anime-card">
+				<a href={`/detail?slug=${encodeURIComponent(anime.animeId)}`} class="anime-card">
 					<div class="card-image">
 						<img 
-							src={anime.thumb} 
+							src={anime.poster} 
 							alt={anime.title}
 							loading="lazy"
 							on:error={(e) => {
@@ -108,12 +78,23 @@
 								<polygon points="5 3 19 12 5 21 5 3"/>
 							</svg>
 						</div>
-						{#if anime.type}
-							<span class="type-badge">{anime.type}</span>
+						{#if anime.score}
+							<span class="score-badge">★ {anime.score}</span>
+						{/if}
+						{#if anime.episodes}
+							<span class="episode-badge">{anime.episodes} Eps</span>
 						{/if}
 					</div>
 					<div class="card-content">
 						<h3>{anime.title}</h3>
+						<div class="card-meta">
+							{#if anime.studios}
+								<span class="studio">{anime.studios}</span>
+							{/if}
+							{#if anime.season}
+								<span class="season">{anime.season}</span>
+							{/if}
+						</div>
 					</div>
 				</a>
 			{/each}
@@ -123,7 +104,7 @@
 		{#if pagination.totalPages > 1}
 			<div class="pagination">
 				<div class="pagination-controls">
-					{#if pagination.currentPage > 1}
+					{#if pagination.hasPrevPage}
 						<button class="pagination-btn" on:click={() => goToPage(1)}>
 							««
 						</button>
@@ -149,7 +130,7 @@
 						{/each}
 					</div>
 
-					{#if pagination.currentPage < pagination.totalPages}
+					{#if pagination.hasNextPage}
 						<button class="pagination-btn" on:click={() => goToPage(pagination.currentPage + 1)}>
 							»
 						</button>
@@ -161,17 +142,13 @@
 
 				<div class="pagination-info">
 					Halaman {pagination.currentPage} dari {pagination.totalPages}
-					{#if pagination.totalItems}
-						<span class="total-items">({pagination.totalItems} anime)</span>
-					{/if}
 				</div>
 			</div>
 		{/if}
 	{:else}
 		<div class="empty-container">
 			<h3>Tidak ada anime</h3>
-			<p>Tidak ditemukan anime dengan filter yang dipilih</p>
-			<a href="/anime-list" class="reset-link">Reset Filter</a>
+			<p>Tidak ditemukan anime dengan genre yang dipilih</p>
 		</div>
 	{/if}
 </main>
@@ -241,7 +218,7 @@
 		font-size: 14px;
 		cursor: pointer;
 		transition: all 0.2s;
-		min-width: 160px;
+		min-width: 180px;
 	}
 
 	.filter-group select:hover {
@@ -256,22 +233,6 @@
 	.filter-group select option {
 		background: #27272a;
 		color: #f4f4f5;
-	}
-
-	.reset-btn {
-		padding: 10px 16px;
-		background: #dc2626;
-		border: none;
-		border-radius: 6px;
-		color: #fff;
-		text-decoration: none;
-		font-size: 13px;
-		font-weight: 500;
-		transition: all 0.2s;
-	}
-
-	.reset-btn:hover {
-		background: #ef4444;
 	}
 
 	.error-container {
@@ -344,17 +305,28 @@
 		opacity: 1;
 	}
 
-	.type-badge {
+	.score-badge {
 		position: absolute;
 		top: 8px;
-		left: 8px;
+		right: 8px;
 		padding: 3px 8px;
 		background: #facc15;
 		color: #0f0f0f;
 		font-size: 10px;
 		font-weight: 600;
 		border-radius: 2px;
-		text-transform: uppercase;
+	}
+
+	.episode-badge {
+		position: absolute;
+		bottom: 8px;
+		left: 8px;
+		padding: 3px 8px;
+		background: #3b82f6;
+		color: #fff;
+		font-size: 10px;
+		font-weight: 600;
+		border-radius: 2px;
 	}
 
 	.card-content {
@@ -365,7 +337,7 @@
 		color: #e4e4e7;
 		font-size: 13px;
 		font-weight: 500;
-		margin: 0;
+		margin: 0 0 6px;
 		display: -webkit-box;
 		-webkit-line-clamp: 2;
 		line-clamp: 2;
@@ -376,6 +348,17 @@
 
 	.anime-card:hover .card-content h3 {
 		color: #facc15;
+	}
+
+	.card-meta {
+		display: flex;
+		flex-direction: column;
+		gap: 2px;
+	}
+
+	.studio, .season {
+		font-size: 11px;
+		color: #71717a;
 	}
 
 	/* Pagination */
@@ -446,10 +429,6 @@
 		font-size: 13px;
 	}
 
-	.total-items {
-		color: #52525b;
-	}
-
 	.empty-container {
 		text-align: center;
 		padding: 60px 40px;
@@ -465,22 +444,7 @@
 
 	.empty-container p {
 		color: #71717a;
-		margin: 0 0 20px;
-	}
-
-	.reset-link {
-		display: inline-block;
-		padding: 10px 20px;
-		background: #facc15;
-		color: #0f0f0f;
-		text-decoration: none;
-		border-radius: 6px;
-		font-weight: 600;
-		transition: all 0.2s;
-	}
-
-	.reset-link:hover {
-		background: #fde047;
+		margin: 0;
 	}
 
 	@media (max-width: 768px) {
@@ -505,11 +469,6 @@
 
 		.filter-group select {
 			width: 100%;
-		}
-
-		.reset-btn {
-			width: 100%;
-			text-align: center;
 		}
 
 		.anime-grid {
