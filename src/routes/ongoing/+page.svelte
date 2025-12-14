@@ -2,6 +2,7 @@
 	import Header from '$lib/Header.svelte';
 	import Navigation from '$lib/Navigation.svelte';
 	import Footer from '$lib/Footer.svelte';
+	import Seo from '$lib/Seo.svelte';
 
 	export let data;
 
@@ -16,6 +17,13 @@
 		window.location.href = `/ongoing?page=${pageNum}`;
 	}
 </script>
+
+<Seo 
+	title={`Anime Ongoing Sub Indo ${currentPage > 1 ? `- Halaman ${currentPage}` : ''} | KumaStream`}
+	description="Daftar anime ongoing subtitle Indonesia terbaru. Nonton anime yang sedang tayang dengan update episode terbaru setiap hari di KumaStream."
+	keywords="anime ongoing, anime terbaru, anime sedang tayang, anime sub indo terbaru, nonton anime update, anime minggu ini"
+	url={`/ongoing${currentPage > 1 ? `?page=${currentPage}` : ''}`}
+/>
 
 <Header />
 <Navigation />

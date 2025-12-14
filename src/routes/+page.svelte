@@ -5,14 +5,18 @@
 	import AnimeGrid from '$lib/AnimeGrid.svelte';
 	import Sidebar from '$lib/Sidebar.svelte';
 	import Footer from '$lib/Footer.svelte';
+	import Seo from '$lib/Seo.svelte';
 
 	export let data;
 </script>
 
-<svelte:head>
-	<title>KumaStream - Nonton Anime Subtitle Indonesia</title>
-	<meta name="description" content="Streaming dan download anime subtitle Indonesia gratis. Koleksi lengkap anime ongoing dan completed.">
-</svelte:head>
+<Seo 
+	title="KumaStream - Nonton Anime Sub Indo Gratis | Streaming & Download"
+	description="KumaStream adalah situs streaming dan download anime subtitle Indonesia terlengkap. Nonton anime terbaru, ongoing, dan complete secara gratis dengan kualitas HD 720p 1080p."
+	keywords="nonton anime, streaming anime, download anime, anime sub indo, anime subtitle indonesia, anime terbaru 2024, anime ongoing, anime batch download, kumastream, nonton anime gratis, anime lengkap"
+	url="/"
+	type="website"
+/>
 
 <Header />
 <Navigation />

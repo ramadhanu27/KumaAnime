@@ -2,6 +2,7 @@
 	import Header from '$lib/Header.svelte';
 	import Navigation from '$lib/Navigation.svelte';
 	import Footer from '$lib/Footer.svelte';
+	import Seo from '$lib/Seo.svelte';
 
 	export let data;
 
@@ -22,10 +23,12 @@
 	}
 </script>
 
-<svelte:head>
-	<title>Anime Complete - KumaStream</title>
-	<meta name="description" content="Daftar anime yang sudah tamat/selesai. Tonton anime favorit dengan subtitle Indonesia.">
-</svelte:head>
+<Seo 
+	title={`Anime Complete Sub Indo ${currentPage > 1 ? `- Halaman ${currentPage}` : ''} | KumaStream`}
+	description="Daftar anime complete subtitle Indonesia. Nonton anime yang sudah tamat dengan semua episode lengkap di KumaStream."
+	keywords="anime complete, anime tamat, anime selesai, anime sub indo lengkap, nonton anime complete, anime full episode"
+	url={`/complete${currentPage > 1 ? `?page=${currentPage}` : ''}`}
+/>
 
 <Header />
 <Navigation />

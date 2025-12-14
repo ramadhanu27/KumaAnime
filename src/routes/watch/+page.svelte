@@ -2,9 +2,10 @@
 	import Header from '$lib/Header.svelte';
 	import Navigation from '$lib/Navigation.svelte';
 	import Footer from '$lib/Footer.svelte';
+	import Seo from '$lib/Seo.svelte';
 	import { watchHistory } from '$lib/stores/watchHistory';
 	import { page } from '$app/stores';
-	import { generateSafelinkUrl, SAFELINK_ENABLED, isOuoUrl, extractSafelinkPath, getOuoUrl, OUO_CONFIG } from '$lib/utils/safelink';
+	import { generateSafelinkUrl, SAFELINK_ENABLED, isOuoUrl, extractSafelinkPath, getOuoUrl } from '$lib/utils/safelink';
 	import { onMount } from 'svelte';
 
 	export let data;
@@ -107,12 +108,22 @@
 		const img = event.target as HTMLImageElement;
 		img.src = 'https://via.placeholder.com/400x225/1a1a2e/6366f1?text=No+Preview';
 	}
+	
+	// SEO data
+	$: seoTitle = episodeData ? `Nonton ${episodeData.title} Sub Indo` : 'Nonton Anime';
+	$: seoDescription = episodeData 
+		? `Streaming ${episodeData.title} subtitle Indonesia gratis. Tonton anime ${episodeData.info?.type || ''} dengan kualitas HD di KumaStream.`
+		: 'Streaming anime subtitle Indonesia di KumaStream';
 </script>
 
-<svelte:head>
-	<title>{episodeData?.title || 'Watch'} - KumaStream</title>
-	<meta name="description" content="Tonton {episodeData?.title || 'anime'} dengan subtitle Indonesia di KumaStream.">
-</svelte:head>
+<Seo 
+	title={seoTitle}
+	description={seoDescription}
+	keywords={episodeData ? `${episodeData.title}, nonton ${episodeData.title}, streaming ${episodeData.title}, ${episodeData.title} sub indo` : 'nonton anime, streaming anime'}
+	url={`/watch?slug=${$page.url.searchParams.get('slug')}`}
+	type="video.other"
+	noindex={false}
+/>
 
 <Header />
 <Navigation />

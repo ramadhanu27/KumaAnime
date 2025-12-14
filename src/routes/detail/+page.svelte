@@ -2,12 +2,49 @@
 	import Header from '$lib/Header.svelte';
 	import Navigation from '$lib/Navigation.svelte';
 	import Footer from '$lib/Footer.svelte';
+	import Seo from '$lib/Seo.svelte';
+	import { page } from '$app/stores';
 
 	export let data;
 
 	$: animeDetail = data.animeDetail;
 	$: error = data.error;
+	
+	// Generate SEO data
+	$: seoTitle = animeDetail ? `Nonton ${animeDetail.title} Sub Indo` : 'Detail Anime';
+	$: seoDescription = animeDetail 
+		? `Streaming dan download ${animeDetail.title} subtitle Indonesia. ${animeDetail.synopsis?.paragraphs?.[0]?.substring(0, 150) || `${animeDetail.type || 'Anime'} dengan ${animeDetail.episodes || '?'} episode.`}` 
+		: 'Lihat detail anime lengkap di KumaStream';
+	$: seoKeywords = animeDetail 
+		? `${animeDetail.title}, nonton ${animeDetail.title}, download ${animeDetail.title}, ${animeDetail.title} sub indo, ${animeDetail.genreList?.map(g => g.title).join(', ') || ''}, streaming anime` 
+		: '';
+	$: seoImage = animeDetail?.poster || '/og-image.png';
+	$: animeGenres = animeDetail?.genreList?.map(g => g.title) || [];
 </script>
+
+{#if animeDetail}
+	<Seo 
+		title={seoTitle}
+		description={seoDescription}
+		keywords={seoKeywords}
+		image={seoImage}
+		url={`/detail?slug=${$page.url.searchParams.get('slug')}`}
+		type="video.other"
+		animeData={{
+			name: animeDetail.title,
+			description: seoDescription,
+			image: animeDetail.poster,
+			genre: animeGenres,
+			datePublished: animeDetail.aired,
+			duration: animeDetail.duration
+		}}
+	/>
+{:else}
+	<Seo 
+		title="Detail Anime - KumaStream"
+		description="Lihat detail anime lengkap di KumaStream"
+	/>
+{/if}
 
 <Header />
 <Navigation />

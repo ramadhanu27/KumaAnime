@@ -2,6 +2,7 @@
 	import Header from '$lib/Header.svelte';
 	import Navigation from '$lib/Navigation.svelte';
 	import Footer from '$lib/Footer.svelte';
+	import Seo from '$lib/Seo.svelte';
 
 	export let data;
 
@@ -31,7 +32,16 @@
 	function goToPage(pageNum: number) {
 		window.location.href = buildFilterUrl(undefined, pageNum);
 	}
+
+	$: genreTitle = filters.genre.charAt(0).toUpperCase() + filters.genre.slice(1).replace('-', ' ');
 </script>
+
+<Seo 
+	title={`Daftar Anime ${genreTitle} Sub Indo ${pagination.currentPage > 1 ? `- Halaman ${pagination.currentPage}` : ''} | KumaStream`}
+	description={`Daftar anime ${genreTitle.toLowerCase()} subtitle Indonesia terlengkap. Nonton dan streaming anime ${genreTitle.toLowerCase()} terbaik di KumaStream.`}
+	keywords={`anime ${filters.genre}, daftar anime ${filters.genre}, streaming anime ${filters.genre}, anime ${filters.genre} sub indo, nonton anime ${filters.genre}`}
+	url={`/anime-list?genre=${filters.genre}${pagination.currentPage > 1 ? `&page=${pagination.currentPage}` : ''}`}
+/>
 
 <Header />
 <Navigation />
@@ -39,7 +49,7 @@
 <main class="anime-list-page">
 	<div class="section-header">
 		<h2>Daftar Anime</h2>
-		<span class="subtitle">Genre: {filters.genre.charAt(0).toUpperCase() + filters.genre.slice(1)}</span>
+		<span class="subtitle">Genre: {genreTitle}</span>
 	</div>
 
 	<!-- Filter Section -->

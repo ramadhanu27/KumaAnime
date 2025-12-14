@@ -2,7 +2,7 @@
 	import Header from '$lib/Header.svelte';
 	import Navigation from '$lib/Navigation.svelte';
 	import Footer from '$lib/Footer.svelte';
-	import { generateSafelinkUrl, SAFELINK_ENABLED, isOuoUrl, extractSafelinkPath, getOuoUrl, OUO_CONFIG } from '$lib/utils/safelink';
+	import { generateSafelinkUrl, SAFELINK_ENABLED, isOuoUrl, extractSafelinkPath, getOuoUrl } from '$lib/utils/safelink';
 	import { onMount } from 'svelte';
 
 	export let data;
