@@ -4,16 +4,37 @@
 	import Footer from '$lib/Footer.svelte';
 	import { watchHistory } from '$lib/stores/watchHistory';
 	import { page } from '$app/stores';
-	import { generateSafelinkUrl, SAFELINK_ENABLED } from '$lib/utils/safelink';
+	import { generateSafelinkUrl, SAFELINK_ENABLED, isOuoUrl, extractSafelinkPath, getOuoUrl, OUO_CONFIG } from '$lib/utils/safelink';
+	import { onMount } from 'svelte';
 
 	export let data;
 
-	// Generate safelink for download links
+	let origin = '';
+	
+	onMount(() => {
+		origin = window.location.origin;
+	});
+
+	// Generate safelink for download links with ouo.io support
 	function getSafelinkUrl(url: string, title: string): string {
-		if (SAFELINK_ENABLED) {
-			return generateSafelinkUrl(url, title);
+		if (!SAFELINK_ENABLED) {
+			return url;
 		}
-		return url;
+		
+		const safelinkResult = generateSafelinkUrl(url, title);
+		
+		// Check if ouo.io is enabled and handle the URL
+		if (isOuoUrl(safelinkResult) && origin) {
+			const safelinkPath = extractSafelinkPath(safelinkResult);
+			return getOuoUrl(safelinkPath, origin);
+		}
+		
+		// If ouo.io is disabled or origin not ready, return regular safelink
+		if (isOuoUrl(safelinkResult)) {
+			return extractSafelinkPath(safelinkResult);
+		}
+		
+		return safelinkResult;
 	}
 
 	$: episodeData = data.episodeData;
