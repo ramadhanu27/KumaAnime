@@ -10,6 +10,24 @@
 	$: error = data.error;
 	$: slug = data.slug;
 	
+	// Episode sorting
+	let sortOrder: 'newest' | 'oldest' = 'newest';
+	
+	// Sort episodes based on selected order
+	$: sortedEpisodes = animeDetail?.episodeList ? [...animeDetail.episodeList].sort((a, b) => {
+		if (sortOrder === 'newest') {
+			// Newest first (higher episode number first)
+			return parseInt(b.eps) - parseInt(a.eps);
+		} else {
+			// Oldest first (lower episode number first)
+			return parseInt(a.eps) - parseInt(b.eps);
+		}
+	}) : [];
+	
+	function toggleSortOrder() {
+		sortOrder = sortOrder === 'newest' ? 'oldest' : 'newest';
+	}
+	
 	// Generate SEO data
 	$: seoTitle = animeDetail ? `Nonton ${animeDetail.title} Sub Indo` : 'Detail Anime';
 	$: seoDescription = animeDetail 
@@ -207,12 +225,23 @@
 					<!-- Episode List -->
 					{#if animeDetail.episodeList && animeDetail.episodeList.length > 0}
 						<div class="content-card">
-							<h2 class="card-title">
-								<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
-								Daftar Episode ({animeDetail.episodeList.length})
-							</h2>
+							<div class="episode-header">
+								<h2 class="card-title">
+									<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
+									Daftar Episode ({animeDetail.episodeList.length})
+								</h2>
+								<button class="sort-btn" on:click={toggleSortOrder}>
+									{#if sortOrder === 'newest'}
+										<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 4h13M3 8h9m-9 4h6m4 0l4-4m0 0l4 4m-4-4v12"/></svg>
+										<span>Terbaru</span>
+									{:else}
+										<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 4h13M3 8h9m-9 4h9m5-4v12m0 0l-4-4m4 4l4-4"/></svg>
+										<span>Terlama</span>
+									{/if}
+								</button>
+							</div>
 							<div class="episodes-grid">
-								{#each animeDetail.episodeList as episode}
+								{#each sortedEpisodes as episode}
 									<a href={`/watch/${encodeURIComponent(episode.episodeId)}`} class="episode-card">
 										<div class="episode-num">
 											<span class="num">{episode.eps}</span>
@@ -707,10 +736,69 @@
 		color: #818cf8;
 	}
 
+	/* Episode Header */
+	.episode-header {
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+		margin-bottom: 16px;
+	}
+
+	.episode-header .card-title {
+		margin-bottom: 0;
+	}
+
+	.sort-btn {
+		display: flex;
+		align-items: center;
+		gap: 6px;
+		padding: 8px 14px;
+		background: #27272a;
+		border: 1px solid #3f3f46;
+		border-radius: 6px;
+		color: #a1a1aa;
+		font-size: 13px;
+		font-weight: 500;
+		cursor: pointer;
+		transition: all 0.2s;
+	}
+
+	.sort-btn:hover {
+		background: #3f3f46;
+		color: #f4f4f5;
+		border-color: #52525b;
+	}
+
+	.sort-btn svg {
+		flex-shrink: 0;
+	}
+
 	/* Episodes Grid */
 	.episodes-grid {
 		display: grid;
 		gap: 10px;
+		max-height: 500px;
+		overflow-y: auto;
+		padding-right: 8px;
+	}
+
+	/* Custom Scrollbar for Episodes */
+	.episodes-grid::-webkit-scrollbar {
+		width: 6px;
+	}
+
+	.episodes-grid::-webkit-scrollbar-track {
+		background: #27272a;
+		border-radius: 3px;
+	}
+
+	.episodes-grid::-webkit-scrollbar-thumb {
+		background: #52525b;
+		border-radius: 3px;
+	}
+
+	.episodes-grid::-webkit-scrollbar-thumb:hover {
+		background: #71717a;
 	}
 
 	.episode-card {
