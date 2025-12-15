@@ -12,6 +12,9 @@ Allow: /search
 Allow: /detail
 Allow: /watch
 Allow: /batch
+Allow: /dmca
+Allow: /privacy
+Allow: /terms
 
 # Disallow admin and private pages
 Disallow: /safelink
@@ -35,10 +38,7 @@ User-agent: Bingbot
 Allow: /
 Crawl-delay: 1
 
-# Block bad bots
-User-agent: AhrefsBot
-Disallow: /
-
+# Block bad bots (AhrefsBot removed - using Ahrefs Analytics)
 User-agent: SemrushBot
 Disallow: /
 

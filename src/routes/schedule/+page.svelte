@@ -96,7 +96,7 @@
 
 				<div class="anime-grid">
 					{#each currentSchedule.anime_list as anime (anime.slug)}
-						<a href={`/detail?slug=${encodeURIComponent(anime.slug)}`} class="anime-card">
+						<a href={`/detail/${encodeURIComponent(anime.slug)}`} class="anime-card">
 							<div class="card-image">
 								<img src={anime.poster} alt={anime.title} loading="lazy" on:error={handleImageError} />
 								<div class="card-overlay">

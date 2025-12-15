@@ -35,7 +35,7 @@
 </script>
 
 <article class="card">
-	<a href={`/detail?slug=${encodeURIComponent(anime.animeId)}`}>
+	<a href={`/detail/${encodeURIComponent(anime.animeId)}`}>
 		<div class="thumb">
 			<img
 				src={anime.poster}

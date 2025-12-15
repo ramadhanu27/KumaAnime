@@ -1,108 +1,15 @@
 import type { PageServerLoad } from "./$types";
+import { redirect } from "@sveltejs/kit";
 
-interface ServerItem {
-  title: string;
-  serverId: string;
-  href: string;
-}
-
-interface QualityServer {
-  title: string;
-  serverList: ServerItem[];
-}
-
-interface DownloadUrl {
-  title: string;
-  url: string;
-}
-
-interface DownloadQuality {
-  title: string;
-  size: string;
-  urls: DownloadUrl[];
-}
-
-interface Genre {
-  title: string;
-  genreId: string;
-  href: string;
-}
-
-interface Episode {
-  title: string;
-  eps: number;
-  date: string;
-  episodeId: string;
-  href: string;
-}
-
-interface NextPrevEpisode {
-  title: string;
-  episodeId: string;
-  href: string;
-}
-
-interface EpisodeInfo {
-  credit: string;
-  encoder: string;
-  duration: string;
-  type: string;
-  genreList: Genre[];
-  episodeList: Episode[];
-}
-
-interface EpisodeData {
-  title: string;
-  animeId: string;
-  releaseTime: string;
-  defaultStreamingUrl: string;
-  hasPrevEpisode: boolean;
-  prevEpisode: NextPrevEpisode | null;
-  hasNextEpisode: boolean;
-  nextEpisode: NextPrevEpisode | null;
-  server: {
-    qualities: QualityServer[];
-  };
-  downloadUrl: {
-    qualities: DownloadQuality[];
-  };
-  info: EpisodeInfo;
-}
-
-interface ApiResponse {
-  status: string;
-  creator: string;
-  statusCode: number;
-  ok: boolean;
-  data: EpisodeData;
-}
-
-export const load: PageServerLoad = async ({ url, fetch }) => {
+// Redirect dari URL lama (/watch?slug=xxx) ke URL baru (/watch/xxx)
+export const load: PageServerLoad = async ({ url }) => {
   const slug = url.searchParams.get("slug");
 
-  if (!slug) {
-    return {
-      error: "Slug tidak ditemukan",
-      episodeData: null,
-    };
+  if (slug) {
+    // Redirect ke format URL baru
+    throw redirect(301, `/watch/${encodeURIComponent(slug)}`);
   }
 
-  try {
-    const response = await fetch(`https://www.sankavollerei.com/anime/episode/${slug}`);
-    if (!response.ok) {
-      throw new Error(`API error: ${response.status}`);
-    }
-    const data: ApiResponse = await response.json();
-
-    return {
-      episodeData: data.data || null,
-      error: null,
-    };
-  } catch (error) {
-    console.error("Error memuat detail episode:", error);
-    return {
-      episodeData: null,
-      error: "Gagal memuat detail episode. Silakan coba lagi.",
-    };
-  }
+  // Jika tidak ada slug, redirect ke homepage
+  throw redirect(302, "/");
 };

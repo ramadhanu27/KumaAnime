@@ -69,7 +69,7 @@
 			{#if genreData.animeList?.length > 0}
 				<div class="anime-grid">
 					{#each genreData.animeList as anime}
-						<a href={`/detail?slug=${anime.animeId}`} class="anime-card">
+						<a href={`/detail/${anime.animeId}`} class="anime-card">
 							<div class="card-image">
 								<img src={anime.poster} alt={anime.title} on:error={handleImageError} loading="lazy" />
 								<div class="card-overlay">

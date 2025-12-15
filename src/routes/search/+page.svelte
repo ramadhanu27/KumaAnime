@@ -33,7 +33,7 @@
 	{:else if searchResults && searchResults.length > 0}
 		<div class="anime-grid">
 			{#each searchResults as anime, index (anime.animeId + index)}
-				<a href={`/detail?slug=${encodeURIComponent(anime.animeId)}`} class="anime-card">
+				<a href={`/detail/${encodeURIComponent(anime.animeId)}`} class="anime-card">
 					<div class="card-image">
 						<img 
 							src={anime.poster} 

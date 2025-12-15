@@ -74,7 +74,7 @@
 		<div class="history-grid">
 			{#each history as item (item.slug)}
 				<div class="history-card">
-					<a href={`/watch?slug=${encodeURIComponent(item.slug)}`} class="card-link">
+					<a href={`/watch/${encodeURIComponent(item.slug)}`} class="card-link">
 						<div class="card-thumbnail">
 							{#if item.thumbnail}
 								<img src={item.thumbnail} alt={item.title} loading="lazy" />

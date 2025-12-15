@@ -1,13 +1,24 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
 
+	interface OngoingAnimeItem {
+		title: string;
+		poster: string;
+		episodes: number | null;
+		releaseDay: string;
+		latestReleaseDate: string;
+		animeId: string;
+		href: string;
+		otakudesuUrl: string;
+	}
+
 	interface HeroItem {
 		title: string;
 		thumb: string;
 		status: string;
 		type: string;
 		description: string;
-		genres: string[];
+		releaseDay: string;
 		slug: string;
 	}
 
@@ -25,20 +36,20 @@
 
 	async function loadHeroSlider() {
 		try {
-			const response = await fetch('https://rdapi.vercel.app/api/anime/ongoing?page=1');
+			const response = await fetch('https://www.sankavollerei.com/anime/home');
 			if (!response.ok) {
 				throw new Error(`API error: ${response.status}`);
 			}
 			const data = await response.json();
-			if (data.success && data.data && Array.isArray(data.data)) {
-				heroItems = data.data.slice(0, 5).map((anime: any) => ({
+			if (data.ok && data.data?.ongoing?.animeList) {
+				heroItems = data.data.ongoing.animeList.slice(0, 5).map((anime: OngoingAnimeItem) => ({
 					title: anime.title || 'Unknown',
-					thumb: anime.thumb || 'https://via.placeholder.com/1200x400/1a1a2e/ffffff?text=No+Image',
-					status: anime.status || 'Ongoing',
-					type: anime.type || 'TV',
-					description: anime.synopsis || 'Anime terbaru',
-					genres: anime.genres || [],
-					slug: anime.slug
+					thumb: anime.poster || 'https://via.placeholder.com/1200x400/18181b/facc15?text=No+Image',
+					status: 'ONGOING',
+					type: 'TV',
+					description: 'Anime terbaru',
+					releaseDay: anime.releaseDay || '',
+					slug: anime.animeId
 				}));
 			}
 		} catch (error) {
@@ -84,15 +95,13 @@
 							</div>
 							<h2>{item.title}</h2>
 							<p class="desc">{item.description}</p>
-							{#if item.genres && item.genres.length > 0}
+							{#if item.releaseDay}
 								<div class="genres">
-									{#each item.genres.slice(0, 3) as genre}
-										<span>{genre}</span>
-									{/each}
+									<span>{item.releaseDay}</span>
 								</div>
 							{/if}
 							<div class="actions">
-								<a href={`/detail?slug=${encodeURIComponent(item.slug)}`} class="btn-watch">
+								<a href={`/detail/${encodeURIComponent(item.slug)}`} class="btn-watch">
 									<svg viewBox="0 0 24 24" fill="currentColor" width="18" height="18">
 										<polygon points="5 3 19 12 5 21 5 3"/>
 									</svg>

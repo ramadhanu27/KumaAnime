@@ -1,12 +1,23 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
 
+	interface CompletedAnimeItem {
+		title: string;
+		poster: string;
+		episodes: number;
+		score: string;
+		lastReleaseDate: string;
+		animeId: string;
+		href: string;
+		otakudesuUrl: string;
+	}
+
 	interface AnimeItem {
 		title: string;
 		thumb: string;
 		slug: string;
-		rating: string;
-		genres: string[];
+		score: string;
+		episodes: number;
 	}
 
 	interface Genre {
@@ -19,25 +30,25 @@
 	let genres: Genre[] = [];
 
 	onMount(() => {
-		loadPopularAnime();
+		loadCompletedAnime();
 		loadGenres();
 	});
 
-	async function loadPopularAnime() {
+	async function loadCompletedAnime() {
 		try {
-			const response = await fetch('https://rdapi.vercel.app/api/anime/popular?period=all');
+			const response = await fetch('https://www.sankavollerei.com/anime/home');
 			const data = await response.json();
-			if (data.success && data.data) {
-				popularAnime = data.data.slice(0, 10).map((anime: any) => ({
+			if (data.ok && data.data?.completed?.animeList) {
+				popularAnime = data.data.completed.animeList.slice(0, 10).map((anime: CompletedAnimeItem) => ({
 					title: anime.title,
-					thumb: anime.thumb,
-					slug: anime.slug.replace(/\//g, ''),
-					rating: anime.rating || '0',
-					genres: anime.genres || []
+					thumb: anime.poster,
+					slug: anime.animeId,
+					score: anime.score || '-',
+					episodes: anime.episodes || 0
 				}));
 			}
 		} catch (error) {
-			console.error('Error loading popular anime:', error);
+			console.error('Error loading completed anime:', error);
 		}
 	}
 
@@ -55,12 +66,12 @@
 </script>
 
 <aside class="sidebar">
-	<!-- Popular Anime -->
+	<!-- Completed Anime -->
 	<div class="widget">
-		<h3 class="widget-title">Popular</h3>
+		<h3 class="widget-title">Completed</h3>
 		<div class="popular-list">
 			{#each popularAnime as anime, index (anime.slug)}
-				<a href={`/detail?slug=${encodeURIComponent(anime.slug)}`} class="popular-item">
+				<a href={`/detail/${encodeURIComponent(anime.slug)}`} class="popular-item">
 					<span class="rank" class:top={index < 3}>{index + 1}</span>
 					<img
 						src={anime.thumb}
@@ -72,7 +83,14 @@
 					/>
 					<div class="item-info">
 						<h4>{anime.title}</h4>
-						<span class="genres">{anime.genres?.slice(0, 2).join(', ') || '-'}</span>
+						<span class="meta-info">
+							{#if anime.score && anime.score !== '-'}
+								<span class="score">⭐ {anime.score}</span>
+							{/if}
+							{#if anime.episodes}
+								<span class="eps">{anime.episodes} Eps</span>
+							{/if}
+						</span>
 					</div>
 				</a>
 			{/each}
@@ -182,8 +200,17 @@
 		color: #facc15;
 	}
 
-	.genres {
+	.meta-info {
+		display: flex;
+		gap: 8px;
 		font-size: 11px;
+	}
+
+	.score {
+		color: #facc15;
+	}
+
+	.eps {
 		color: #52525b;
 	}
 
