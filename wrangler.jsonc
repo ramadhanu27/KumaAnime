@@ -1,5 +1,5 @@
 {
-  "name": "anime-sveltekit",
+  "name": "nontonanime",
   "main": ".svelte-kit/cloudflare/index.js",
   "compatibility_date": "2025-12-02",
   "compatibility_flags": ["nodejs_compat"],
