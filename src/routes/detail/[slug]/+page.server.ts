@@ -91,23 +91,50 @@ export const load: PageServerLoad = async ({ params, fetch }) => {
   }
 
   try {
-    const response = await fetch(`https://www.sankavollerei.com/anime/anime/${slug}`);
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 15000); // 15 second timeout
+
+    const response = await fetch(`https://www.sankavollerei.com/anime/anime/${slug}`, {
+      signal: controller.signal,
+      headers: {
+        Accept: "application/json",
+        "User-Agent": "KumaStream/1.0",
+      },
+    });
+
+    clearTimeout(timeoutId);
+
     if (!response.ok) {
+      console.error(`API error: ${response.status} - ${response.statusText}`);
       throw new Error(`API error: ${response.status}`);
     }
+
     const result: ApiResponse = await response.json();
 
+    if (!result.data) {
+      throw new Error("Data anime tidak ditemukan");
+    }
+
     return {
-      animeDetail: result.data || null,
+      animeDetail: result.data,
       slug: slug,
       error: null,
     };
   } catch (error) {
-    console.error("Error memuat detail anime:", error);
+    const errorMessage = error instanceof Error ? error.message : "Unknown error";
+    console.error("Error memuat detail anime:", errorMessage, error);
+
+    let userMessage = "Gagal memuat detail anime. Silakan coba lagi.";
+    if (errorMessage.includes("abort")) {
+      userMessage = "Request timeout. Silakan coba lagi.";
+    } else if (errorMessage.includes("fetch")) {
+      userMessage = "Gagal terhubung ke server. Silakan coba lagi.";
+    }
+
     return {
       animeDetail: null,
       slug: slug,
-      error: "Gagal memuat detail anime. Silakan coba lagi.",
+      error: userMessage,
     };
   }
 };
