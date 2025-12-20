@@ -17,7 +17,7 @@
 	let sortOrder: 'newest' | 'oldest' = 'newest';
 	
 	// Sort episodes based on selected order
-	$: sortedEpisodes = animeDetail?.episodeList ? [...animeDetail.episodeList].sort((a, b) => {
+	let sortedEpisodes = $derived(animeDetail?.episodeList ? [...animeDetail.episodeList].sort((a, b) => {
 		if (sortOrder === 'newest') {
 			// Newest first (higher episode number first)
 			return parseInt(b.eps) - parseInt(a.eps);
@@ -25,7 +25,7 @@
 			// Oldest first (lower episode number first)
 			return parseInt(a.eps) - parseInt(b.eps);
 		}
-	}) : [];
+	}) : []);
 	
 	function toggleSortOrder() {
 		sortOrder = sortOrder === 'newest' ? 'oldest' : 'newest';
@@ -52,15 +52,15 @@
 	});
 	
 	// Generate SEO data
-	$: seoTitle = animeDetail ? `Nonton ${animeDetail.title} Sub Indo` : 'Detail Anime';
-	$: seoDescription = animeDetail 
+	let seoTitle = $derived(animeDetail ? `Nonton ${animeDetail.title} Sub Indo` : 'Detail Anime');
+	let seoDescription = $derived(animeDetail 
 		? `Streaming dan download ${animeDetail.title} subtitle Indonesia. ${animeDetail.synopsis?.paragraphs?.[0]?.substring(0, 150) || `${animeDetail.type || 'Anime'} dengan ${animeDetail.episodes || '?'} episode.`}` 
-		: 'Lihat detail anime lengkap di KumaStream';
-	$: seoKeywords = animeDetail 
+		: 'Lihat detail anime lengkap di KumaStream');
+	let seoKeywords = $derived(animeDetail 
 		? `${animeDetail.title}, nonton ${animeDetail.title}, download ${animeDetail.title}, ${animeDetail.title} sub indo, ${animeDetail.genreList?.map(g => g.title).join(', ') || ''}, streaming anime` 
-		: '';
-	$: seoImage = animeDetail?.poster || '/og-image.png';
-	$: animeGenres = animeDetail?.genreList?.map(g => g.title) || [];
+		: '');
+	let seoImage = $derived(animeDetail?.poster || '/og-image.png');
+	let animeGenres = $derived(animeDetail?.genreList?.map(g => g.title) || []);
 </script>
 
 {#if animeDetail}
