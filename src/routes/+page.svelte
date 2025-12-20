@@ -6,8 +6,35 @@
 	import Sidebar from '$lib/Sidebar.svelte';
 	import Footer from '$lib/Footer.svelte';
 	import Seo from '$lib/Seo.svelte';
+	import { onMount } from 'svelte';
 
 	export let data;
+
+	// Client-side fallback jika server-side data kosong
+	let ongoingAnime = $state(data.ongoingAnime || []);
+	let completedAnime = $state(data.completedAnime || []);
+	let loading = $state(false);
+	let error = $state<string | null>(null);
+
+	onMount(async () => {
+		// Jika data dari server kosong, coba fetch dari client
+		if (ongoingAnime.length === 0 || completedAnime.length === 0) {
+			loading = true;
+			try {
+				const response = await fetch('https://www.sankavollerei.com/anime/home');
+				if (!response.ok) throw new Error('Failed to fetch');
+				
+				const result = await response.json();
+				ongoingAnime = result.data?.ongoing?.animeList || [];
+				completedAnime = result.data?.completed?.animeList || [];
+			} catch (err) {
+				console.error('Client fetch error:', err);
+				error = 'Gagal memuat data anime';
+			} finally {
+				loading = false;
+			}
+		}
+	});
 </script>
 
 <Seo 
@@ -28,19 +55,25 @@
 	<!-- Content -->
 	<div class="content">
 		<main>
-			<AnimeGrid 
-				animeList={data.ongoingAnime} 
-				sectionTitle="Ongoing Anime" 
-				viewAllHref={data.ongoingHref}
-				type="ongoing" 
-			/>
-			
-			<AnimeGrid 
-				animeList={data.completedAnime} 
-				sectionTitle="Completed Anime" 
-				viewAllHref={data.completedHref}
-				type="completed" 
-			/>
+			{#if loading}
+				<div class="loading">Loading...</div>
+			{:else if error}
+				<div class="error">{error}</div>
+			{:else}
+				<AnimeGrid 
+					animeList={ongoingAnime} 
+					sectionTitle="Ongoing Anime" 
+					viewAllHref={data.ongoingHref}
+					type="ongoing" 
+				/>
+				
+				<AnimeGrid 
+					animeList={completedAnime} 
+					sectionTitle="Completed Anime" 
+					viewAllHref={data.completedHref}
+					type="completed" 
+				/>
+			{/if}
 		</main>
 
 		<aside>
@@ -79,6 +112,16 @@
 	aside {
 		width: 320px;
 		flex-shrink: 0;
+	}
+
+	.loading, .error {
+		text-align: center;
+		padding: 40px;
+		color: #a1a1aa;
+	}
+
+	.error {
+		color: #ef4444;
 	}
 
 	@media (max-width: 1200px) {
