@@ -3,12 +3,15 @@
 	import Navigation from '$lib/Navigation.svelte';
 	import Footer from '$lib/Footer.svelte';
 	import Seo from '$lib/Seo.svelte';
+	import { onMount } from 'svelte';
 
-	export let data;
+	let { data } = $props<{ data: any }>();
 
-	$: animeDetail = data.animeDetail;
-	$: error = data.error;
-	$: slug = data.slug;
+	// Client-side fallback
+	let animeDetail = $state(data.animeDetail);
+	let error = $state(data.error);
+	let slug = $state(data.slug);
+	let loading = $state(false);
 	
 	// Episode sorting
 	let sortOrder: 'newest' | 'oldest' = 'newest';
@@ -27,6 +30,26 @@
 	function toggleSortOrder() {
 		sortOrder = sortOrder === 'newest' ? 'oldest' : 'newest';
 	}
+
+	// Client-side fallback jika server-side gagal
+	onMount(async () => {
+		if (!animeDetail && slug) {
+			loading = true;
+			try {
+				const response = await fetch(`https://www.sankavollerei.com/anime/anime/${slug}`);
+				if (!response.ok) throw new Error('Failed to fetch');
+				
+				const result = await response.json();
+				animeDetail = result.data;
+				error = null;
+			} catch (err) {
+				console.error('Client fetch error:', err);
+				error = 'Gagal memuat detail anime';
+			} finally {
+				loading = false;
+			}
+		}
+	});
 	
 	// Generate SEO data
 	$: seoTitle = animeDetail ? `Nonton ${animeDetail.title} Sub Indo` : 'Detail Anime';
@@ -68,7 +91,12 @@
 <Navigation />
 
 <main class="detail-page">
-	{#if error}
+	{#if loading}
+		<div class="loading-container">
+			<div class="loading-spinner"></div>
+			<p>Loading...</p>
+		</div>
+	{:else if error}
 		<div class="error-container">
 			<div class="error-icon">
 				<svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
