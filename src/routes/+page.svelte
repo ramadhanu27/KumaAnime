@@ -8,7 +8,7 @@
 	import Seo from '$lib/Seo.svelte';
 	import { onMount } from 'svelte';
 
-	export let data;
+	let { data } = $props<{ data: any }>();
 
 	// Client-side fallback jika server-side data kosong
 	let ongoingAnime = $state(data.ongoingAnime || []);
