@@ -4,14 +4,14 @@
 	import Footer from '$lib/Footer.svelte';
 	import Seo from '$lib/Seo.svelte';
 
-	export let data;
+	let { data } = $props<{ data: any }>();
 
-	$: animeList = data.animeList;
-	$: currentPage = data.currentPage;
-	$: totalPages = data.totalPages;
-	$: hasNextPage = data.hasNextPage;
-	$: hasPrevPage = data.hasPrevPage;
-	$: error = data.error;
+	let animeList = $derived(data.animeList);
+	let currentPage = $derived(data.currentPage);
+	let totalPages = $derived(data.totalPages);
+	let hasNextPage = $derived(data.hasNextPage);
+	let hasPrevPage = $derived(data.hasPrevPage);
+	let error = $derived(data.error);
 
 	function goToPage(pageNum: number) {
 		window.location.href = `/complete?page=${pageNum}`;
