@@ -1,4 +1,5 @@
 import type { PageServerLoad } from "./$types";
+import { fetchWithTimeout } from "$lib/utils/fetchWithTimeout";
 
 interface OngoingAnimeItem {
   title: string;
@@ -50,20 +51,29 @@ interface ApiResponse {
 
 export const load: PageServerLoad = async ({ fetch }) => {
   try {
-    const response = await fetch("https://www.sankavollerei.com/anime/home");
+    const response = await fetchWithTimeout("https://www.sankavollerei.com/anime/home");
+
     if (!response.ok) {
+      console.error(`API error: ${response.status} - ${response.statusText}`);
       throw new Error(`API error: ${response.status}`);
     }
+
     const result: ApiResponse = await response.json();
 
+    if (!result.data) {
+      throw new Error("Data tidak ditemukan");
+    }
+
     return {
-      ongoingAnime: result.data?.ongoing?.animeList || [],
-      completedAnime: result.data?.completed?.animeList || [],
-      ongoingHref: result.data?.ongoing?.href || "",
-      completedHref: result.data?.completed?.href || "",
+      ongoingAnime: result.data.ongoing?.animeList || [],
+      completedAnime: result.data.completed?.animeList || [],
+      ongoingHref: result.data.ongoing?.href || "",
+      completedHref: result.data.completed?.href || "",
     };
   } catch (error) {
-    console.error("Error fetching anime data:", error);
+    const errorMessage = error instanceof Error ? error.message : "Unknown error";
+    console.error("Error fetching anime data:", errorMessage, error);
+
     return {
       ongoingAnime: [],
       completedAnime: [],

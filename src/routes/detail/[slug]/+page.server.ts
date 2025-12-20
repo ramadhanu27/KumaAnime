@@ -1,5 +1,6 @@
 import type { PageServerLoad } from "./$types";
 import { redirect } from "@sveltejs/kit";
+import { fetchWithTimeout } from "$lib/utils/fetchWithTimeout";
 
 interface Genre {
   title: string;
@@ -91,18 +92,7 @@ export const load: PageServerLoad = async ({ params, fetch }) => {
   }
 
   try {
-    const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), 15000); // 15 second timeout
-
-    const response = await fetch(`https://www.sankavollerei.com/anime/anime/${slug}`, {
-      signal: controller.signal,
-      headers: {
-        Accept: "application/json",
-        "User-Agent": "KumaStream/1.0",
-      },
-    });
-
-    clearTimeout(timeoutId);
+    const response = await fetchWithTimeout(`https://www.sankavollerei.com/anime/anime/${slug}`);
 
     if (!response.ok) {
       console.error(`API error: ${response.status} - ${response.statusText}`);

@@ -1,4 +1,5 @@
 import type { PageServerLoad } from "./$types";
+import { fetchWithTimeout } from "$lib/utils/fetchWithTimeout";
 
 interface CompleteAnime {
   title: string;
@@ -33,14 +34,21 @@ export const load: PageServerLoad = async ({ url, fetch }) => {
   const page = url.searchParams.get("page") || "1";
 
   try {
-    const response = await fetch(`https://www.sankavollerei.com/anime/complete-anime?page=${page}`);
+    const response = await fetchWithTimeout(`https://www.sankavollerei.com/anime/complete-anime?page=${page}`);
+
     if (!response.ok) {
+      console.error(`API error: ${response.status} - ${response.statusText}`);
       throw new Error(`API error: ${response.status}`);
     }
+
     const data: CompleteResponse = await response.json();
 
+    if (!data.data) {
+      throw new Error("Data tidak ditemukan");
+    }
+
     return {
-      animeList: data.data?.animeList || [],
+      animeList: data.data.animeList || [],
       currentPage: data.pagination?.currentPage || 1,
       totalPages: data.pagination?.totalPages || 1,
       hasNextPage: data.pagination?.hasNextPage || false,
@@ -48,7 +56,8 @@ export const load: PageServerLoad = async ({ url, fetch }) => {
       error: null,
     };
   } catch (error) {
-    console.error("Error memuat anime complete:", error);
+    const errorMessage = error instanceof Error ? error.message : "Unknown error";
+    console.error("Error memuat anime complete:", errorMessage, error);
     return {
       animeList: [],
       currentPage: 1,

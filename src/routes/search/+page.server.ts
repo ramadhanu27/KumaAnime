@@ -1,4 +1,5 @@
 import type { PageServerLoad } from "./$types";
+import { fetchWithTimeout } from "$lib/utils/fetchWithTimeout";
 
 interface SearchAnime {
   title: string;
@@ -32,19 +33,27 @@ export const load: PageServerLoad = async ({ url, fetch }) => {
   }
 
   try {
-    const response = await fetch(`https://www.sankavollerei.com/anime/search/${encodeURIComponent(query)}`);
+    const response = await fetchWithTimeout(`https://www.sankavollerei.com/anime/search/${encodeURIComponent(query)}`);
+
     if (!response.ok) {
+      console.error(`API error: ${response.status} - ${response.statusText}`);
       throw new Error(`API error: ${response.status}`);
     }
+
     const data: ApiResponse = await response.json();
 
+    if (!data.data) {
+      throw new Error("Data tidak ditemukan");
+    }
+
     return {
-      searchResults: data.data?.animeList || [],
+      searchResults: data.data.animeList || [],
       searchQuery: query,
       error: null,
     };
   } catch (error) {
-    console.error("Error searching anime:", error);
+    const errorMessage = error instanceof Error ? error.message : "Unknown error";
+    console.error("Error searching anime:", errorMessage, error);
     return {
       searchResults: [],
       searchQuery: query,

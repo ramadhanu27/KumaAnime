@@ -1,4 +1,5 @@
 import type { PageServerLoad } from "./$types";
+import { fetchWithTimeout } from "$lib/utils/fetchWithTimeout";
 
 interface ServerItem {
   title: string;
@@ -89,19 +90,27 @@ export const load: PageServerLoad = async ({ params, fetch }) => {
   }
 
   try {
-    const response = await fetch(`https://www.sankavollerei.com/anime/episode/${slug}`);
+    const response = await fetchWithTimeout(`https://www.sankavollerei.com/anime/episode/${slug}`);
+
     if (!response.ok) {
+      console.error(`API error: ${response.status} - ${response.statusText}`);
       throw new Error(`API error: ${response.status}`);
     }
+
     const data: ApiResponse = await response.json();
 
+    if (!data.data) {
+      throw new Error("Data episode tidak ditemukan");
+    }
+
     return {
-      episodeData: data.data || null,
+      episodeData: data.data,
       slug: slug,
       error: null,
     };
   } catch (error) {
-    console.error("Error memuat detail episode:", error);
+    const errorMessage = error instanceof Error ? error.message : "Unknown error";
+    console.error("Error memuat detail episode:", errorMessage, error);
     return {
       episodeData: null,
       slug: slug,
