@@ -90,7 +90,7 @@ export const load: PageServerLoad = async ({ params, fetch }) => {
   }
 
   try {
-    const response = await fetchWithTimeout(`https://www.sankavollerei.com/anime/episode/${slug}`);
+    const response = await fetchWithTimeout(`https://www.sankavollerei.com/anime/episode/${slug}`, fetch);
 
     if (!response.ok) {
       console.error(`API error: ${response.status} - ${response.statusText}`);

@@ -51,7 +51,7 @@ interface ApiResponse {
 
 export const load: PageServerLoad = async ({ fetch }) => {
   try {
-    const response = await fetchWithTimeout("https://www.sankavollerei.com/anime/home");
+    const response = await fetchWithTimeout("https://www.sankavollerei.com/anime/home", fetch);
 
     if (!response.ok) {
       console.error(`API error: ${response.status} - ${response.statusText}`);

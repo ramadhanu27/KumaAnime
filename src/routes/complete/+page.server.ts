@@ -34,7 +34,7 @@ export const load: PageServerLoad = async ({ url, fetch }) => {
   const page = url.searchParams.get("page") || "1";
 
   try {
-    const response = await fetchWithTimeout(`https://www.sankavollerei.com/anime/complete-anime?page=${page}`);
+    const response = await fetchWithTimeout(`https://www.sankavollerei.com/anime/complete-anime?page=${page}`, fetch);
 
     if (!response.ok) {
       console.error(`API error: ${response.status} - ${response.statusText}`);
